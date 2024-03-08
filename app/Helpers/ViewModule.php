@@ -277,70 +277,69 @@ if (!function_exists('viewForm')) {
 
 
 if (!function_exists('ViewFormField')) {
-    function ViewFormField($moduleName)
+    function ViewFormField($moduleName, $fields)
     {
 
-        $content = <<<"EOD"
+        $content = <<<EOD
         export default [
-            {
-                name: "name",
-                label: "Enter your  name",
-                type: "text",
-                value: "",
-            },
-            {
-                name: "email",
-                label: "Enter your email",
-                type: "email",
-                value: "",
-            },
-            {
-                name: "password",
-                label: "Enter your password",
-                type: "password",
-                value: "",
-            },
-            {
-                name: "phone",
-                label: "Enter your phone number",
-                type: "number",
-                value: "",
-            },
-
-            {
-                name: "image",
-                label: "Upload your image",
-                type: "file",
-                value: null,
-                multiple: false,
-            },
-            {
-                name: "status",
-                label: "Select default status",
-                type: "select",
-                value: "",
-                multiple: false,
-                data_list: [
-                    {
-                        label: "Active",
-                        value: "active",
-                    },
-                    {
-                        label: "Inactive",
-                        value: "inactive",
-                    },
-                ],
-            },
-        ];
-
         EOD;
+
+        if (count($fields)) {
+            foreach ($fields as $fieldName) {
+                // dd($fieldName);
+                $content .= "\n\t{\n";
+                $content .= "\t\tname: \"$fieldName[0]\",\n";
+                $content .= "\t\tlabel: \"Enter your $fieldName[0]\",\n";
+
+                if (count($fieldName) > 1) {
+                    $type = $fieldName[1];
+                    switch ($type) {
+                        case 'longtext':
+                            $content .= "\t\ttype: \"textarea\",\n";
+                            break;
+                        case 'number':
+                            $content .= "\t\ttype: \"number\",\n";
+                            break;
+                        case 'select':
+                        case 'boolean':
+                            $content .= "\t\ttype: \"select\",\n";
+                            $content .= "\t\tlabel: \"Select default $fieldName[0]\",\n";
+                            $content .= "\t\tvalue: \"\",\n";
+                            $content .= "\t\tmultiple: false,\n";
+                            $content .= "\t\tdata_list: [\n";
+                            $content .= "\t\t\t{\n";
+                            $content .= "\t\t\t\tlabel: \"Active\",\n";
+                            $content .= "\t\t\t\tvalue: \"active\",\n";
+                            $content .= "\t\t\t},\n";
+                            $content .= "\t\t\t{\n";
+                            $content .= "\t\t\t\tlabel: \"Inactive\",\n";
+                            $content .= "\t\t\t\tvalue: \"inactive\",\n";
+                            $content .= "\t\t\t},\n";
+                            $content .= "\t\t],\n";
+                            break;
+                        case 'password':
+                            $content .= "\t\ttype: \"password\",\n";
+                            break;
+                        default:
+                            $content .= "\t\ttype: \"text\",\n";
+                    }
+                } else {
+                    $content .= "\t\ttype: \"text\",\n";
+                }
+                $content .= "\t\tvalue: \"\",\n";
+                $content .= "\t},\n";
+            }
+        }
+
+        $content .= "];\n";
+
 
         return $content;
     }
 }
 
 if (!function_exists('ViewIndex')) {
-    function ViewIndex($moduleName)
+    function ViewIndex($moduleName, $role)
     {
         $prefix = Str::singular((ucfirst($moduleName)));
 
@@ -348,6 +347,7 @@ if (!function_exists('ViewIndex')) {
         let setup = {
             page_title: `{$prefix} Management`,
             route_prefix: `{$prefix}`,
+            role_prefix:`{$role}`
         }
         export default setup;
         EOD;

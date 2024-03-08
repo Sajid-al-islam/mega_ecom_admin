@@ -7,7 +7,7 @@ let route_prefix = setup.route_prefix;
 
 const routes =
 {
-    path: 'todo-list',
+    path: 'test-module',
     component: Layout,
     children: [
         {

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Modules\TodoList\Models;
+namespace App\Modules\TestModule\Models;
 
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Support\Str;
 
 class Model extends EloquentModel
 {
-    protected $table = "todo_lists";
+    protected $table = "test_modules";
     protected $guarded = [];
 
     protected static function booted()

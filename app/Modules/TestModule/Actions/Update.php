@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Modules\TodoList\Actions;
+namespace App\Modules\TestModule\Actions;
 
-use App\Modules\TodoList\Validations\Validation;
+use App\Modules\TestModule\Validations\Validation;
 
 class Update
 {
-    static $model = \App\Modules\TodoList\Models\Model::class;
+    static $model = \App\Modules\TestModule\Models\Model::class;
 
     public static function execute(Validation $request,$id)
     {
@@ -14,7 +14,8 @@ class Update
             if (!$data = self::$model::query()->where('id', $id)->first()) {
                 return messageResponse('Data not found...', 404, 'error');
             }
-            $data->update($request->validated());
+            $requestData = $request->validated();
+            $data->update($requestData);
             return messageResponse('Item updated successfully');
         } catch (\Exception $e) {
             return messageResponse($e->getMessage(), 500, 'server_error');

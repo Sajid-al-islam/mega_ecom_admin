@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Modules\TodoList\Actions;
+namespace App\Modules\TestModule\Actions;
 
 class BulkActions
 {
-    static $model = \App\Modules\TodoList\Models\Model::class;
+    static $model = \App\Modules\TestModule\Models\Model::class;
 
     public static function execute()
     {

@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
 
-export const todo_list_setup_store = defineStore("todo_list_setup_store", {
+export const test_module_setup_store = defineStore("test_module_setup_store", {
     state: () => ({
         all_data: {},
         single_data: {},
         role_data: {},
-        api:"todo-lists/"
+        api:"test-modules/"
     }),
     getters: {
         doubleCount: (state) => state.count * 2,

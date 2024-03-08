@@ -91,7 +91,7 @@
 
             <script>
             import { mapActions, mapState } from 'pinia'
-            import { todo_list_setup_store } from './setup/store';
+            import { test_rupom_setup_store } from './setup/store';
             import setup from "./setup";
             export default {
                 data: () => ({
@@ -106,7 +106,7 @@
                     this.get_all_data()
                 },
                 methods: {
-                    ...mapActions(todo_list_setup_store, {
+                    ...mapActions(test_rupom_setup_store, {
                         get_all_data: 'all',
                         delete_data: 'delete',
                         bulk_action: 'bulk_action',
@@ -132,7 +132,7 @@
 
                 },
                 computed: {
-                    ...mapState(todo_list_setup_store, {
+                    ...mapState(test_rupom_setup_store, {
                         all_data: 'all_data',
                     })
                 }

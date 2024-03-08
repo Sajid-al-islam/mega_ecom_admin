@@ -31,7 +31,7 @@
 
         <script>
         import { mapActions, mapState } from 'pinia'
-        import { todo_list_setup_store } from './setup/store';
+        import { test_module_setup_store } from './setup/store';
         import setup from "./setup";
         import form_fields from "./setup/form_fields";
 
@@ -66,7 +66,7 @@
                 }
             },
             methods: {
-                ...mapActions(todo_list_setup_store, {
+                ...mapActions(test_module_setup_store, {
                     get_all_data: 'all',
                     get_single_data: 'get',
                     store_data: 'store',
@@ -93,7 +93,7 @@
             },
 
             computed: {
-                ...mapState(todo_list_setup_store, {
+                ...mapState(test_module_setup_store, {
                     single_data: "single_data",
                     all_data: 'all_data',
                 }),

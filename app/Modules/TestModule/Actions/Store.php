@@ -1,18 +1,19 @@
 <?php
 
-namespace App\Modules\TodoList\Actions;
+namespace App\Modules\TestModule\Actions;
 
-use App\Modules\TodoList\Validations\Validation;
+use App\Modules\TestModule\Validations\Validation;
 
 
 class Store
 {
-    static $model = \App\Modules\TodoList\Models\Model::class;
+    static $model = \App\Modules\TestModule\Models\Model::class;
 
     public static function execute(Validation $request)
     {
         try {
-            if (self::$model::query()->create($request->validated())) {
+            $requestData = $request->validated();
+            if (self::$model::query()->create($requestData)) {
                 return messageResponse('Item added successfully', 201);
             }
         } catch (\Exception $e) {

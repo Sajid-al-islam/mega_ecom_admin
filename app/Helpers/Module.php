@@ -157,7 +157,8 @@ if (!function_exists('store')) {
                 public static function execute(Validation \$request)
                 {
                     try {
-                        if (self::\$model::query()->create(\$request->validated())) {
+                        \$requestData = \$request->validated();
+                        if (self::\$model::query()->create(\$requestData)) {
                             return messageResponse('Item added successfully', 201);
                         }
                     } catch (\Exception \$e) {
@@ -201,7 +202,8 @@ if (!function_exists('update')) {
                         if (!\$data = self::\$model::query()->where('id', \$id)->first()) {
                             return messageResponse('Data not found...', 404, 'error');
                         }
-                        \$data->update(\$request->validated());
+                        \$requestData = \$request->validated();
+                        \$data->update(\$requestData);
                         return messageResponse('Item updated successfully');
                     } catch (\Exception \$e) {
                         return messageResponse(\$e->getMessage(), 500, 'server_error');
@@ -298,8 +300,10 @@ if (!function_exists('delete')) {
 }
 
 if (!function_exists('validation')) {
-    function validation($moduleName)
+    function validation($moduleName, $fields)
     {
+
+
         $formated_module = explode('/', $moduleName);
 
         if (count($formated_module) > 1) {
@@ -309,6 +313,16 @@ if (!function_exists('validation')) {
         } else {
             $moduleName = Str::replace("/", "\\", $moduleName);
         }
+
+        $formatField = [];
+        if (count($fields)) {
+            foreach ($fields as $field) {
+                $formatField[] = [
+                    $field[0] => 'required'
+                ];
+            }
+        }
+        // dd($formatField);
 
         $content = <<<"EOD"
             <?php
@@ -338,19 +352,6 @@ if (!function_exists('validation')) {
                     return response(['status' => 'validation_error', 'errors' => \$errorPayload], 422);
                 }
 
-                /**
-                 * Get the validation rules that apply to the request.
-                 *
-                 * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
-                 */
-                public function rules(): array
-                {
-                    return [
-                        'title' => 'required',
-                        'status' => ['sometimes', Rule::in(['active', 'inactive'])],
-                    ];
-                }
-
                 protected function failedValidation(Validator \$validator)
                 {
                     throw new HttpResponseException(\$this->validateError(\$validator->errors()));
@@ -359,9 +360,35 @@ if (!function_exists('validation')) {
                     }
                     parent::failedValidation(\$validator);
                 }
+
+                /**
+                 * Get the validation rules that apply to the request.
+                 *
+                 * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
+                 */
+                public function rules(): array
+                {
+                    return [
+
+            EOD;
+
+        // Now, let's dynamically add rules from $formatField
+        if (count($formatField)) {
+            foreach ($formatField as $fieldName => $rule) {
+                if (is_array($rule)) {
+                    foreach ($rule as $field => $validation) {
+                        $content .= "            '$field' => '$validation | sometimes',\n";
+                    }
+                }
+            }
+        }
+        $content .= <<<EOD
+                        'status' => ['sometimes', Rule::in(['active', 'inactive'])],
+                    ];
+                }
             }
             EOD;
-        // $content = str_replace('{moduleName}', $moduleName, $content);
+
         return $content;
     }
 }
@@ -503,9 +530,11 @@ if (!function_exists('model')) {
 }
 
 if (!function_exists('migration')) {
-    function migration($moduleName)
+    function migration($moduleName, $fields)
     {
         $table_name = Str::plural((Str::snake($moduleName)));
+
+
 
         $content = <<<"EOD"
         <?php
@@ -523,7 +552,33 @@ if (!function_exists('migration')) {
             {
                 Schema::create('{$table_name}', function (Blueprint \$table) {
                     \$table->id();
-                    \$table->string('title')->nullable();
+
+        EOD;
+        if (count($fields)) {
+            foreach ($fields as $fieldName) {
+
+                if (count($fieldName) == 1) {
+                    $content .= "            \$table->string('{$fieldName[0]}')->nullable();\n";
+                }
+                if (count($fieldName) > 1) {
+                    $type = $fieldName[1];
+                    if ($type == 'text') {
+                        $type =  'string';
+                    } elseif ($type == 'longtext') {
+                        $type =  'text';
+                    } elseif ($type == 'number') {
+                        $type = 'bigInteger';
+                    } elseif ($type == 'boolean') {
+                        $type =  'tinyInteger';
+                    } else {
+                        $type =  'string';
+                    }
+
+                    $content .= "            \$table->{$type}('{$fieldName[0]}')->nullable();\n";
+                }
+            }
+        }
+        $content .= <<<EOD
 
                     \$table->bigInteger('creator')->unsigned()->nullable();
                     \$table->string('slug', 50)->nullable();
@@ -546,9 +601,11 @@ if (!function_exists('migration')) {
     }
 }
 
+
 if (!function_exists('seeder')) {
-    function seeder($moduleName)
+    function seeder($moduleName, $module_Name, $fields)
     {
+
         $formated_module = explode('/', $moduleName);
         if (count($formated_module) > 1) {
             $moduleName = implode('/', $formated_module);
@@ -556,6 +613,19 @@ if (!function_exists('seeder')) {
         } else {
             $moduleName = Str::replace("/", "\\", $moduleName);
         }
+
+        $formatField = [];
+        if (count($fields)) {
+            foreach ($fields as $field) {
+                $formatField[] = [
+                    $field[0] => $field[0]
+                ];
+            }
+        }
+
+
+
+
         $content = <<<"EOD"
         <?php
         namespace App\\Modules\\{$moduleName}\\Database;
@@ -566,11 +636,27 @@ if (!function_exists('seeder')) {
         {
             /**
              * Run the database seeds.
+             php artisan db:seed --class=\App\\Modules\\{$moduleName}\\Database\\Seeder
              */
             static \$model = \App\\Modules\\{$moduleName}\\Models\\Model::class;
             public function run(): void
             {
-                self::\$model::factory()->count(100)->create();
+                // self::\$model::factory()->count(100)->create();
+                self::\$model::truncate();
+                self::\$model::create([
+
+        EOD;
+        if (count($formatField)) {
+            foreach ($formatField as $fieldName => $rule) {
+                if (is_array($rule)) {
+                    foreach ($rule as $field => $value) {
+                        $content .= "            '$field' => '$value',\n";
+                    }
+                }
+            }
+        }
+        $content .= <<<EOD
+                ]);
             }
         }
         EOD;

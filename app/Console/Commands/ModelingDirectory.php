@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class ModelingDirectory extends Command
 {
-    protected $signature = 'make:module {module_name} {--vue}';
+    protected $signature = 'make:module {module_name} {[field]?} {--vue}';
     protected $description = 'Create a folder and files in the app directory';
 
     public function __construct()
@@ -18,9 +18,25 @@ class ModelingDirectory extends Command
 
     public function handle()
     {
+
         $moduleName = $this->argument('module_name');
         $ViewModuleName = $this->argument('module_name');
         $withVue = $this->option('vue');
+        $fields = [];
+
+        // Check if the field argument is provided
+        if ($this->hasArgument('[field]') && $this->argument('[field]')) {
+            $fieldName = $this->argument('[field]');
+            $fieldName = str_replace('[', '', $fieldName);
+            $fieldName = str_replace(']', '', $fieldName);
+            $fieldName = explode(',', $fieldName);
+            foreach ($fieldName as $item) {
+                $fields[] =  explode(':', $item);
+            }
+        }
+
+
+
         $baseDirectory = app_path("Modules/");
         $format_dir = explode('/', $moduleName);
         $module_dir = null;
@@ -92,16 +108,16 @@ class ModelingDirectory extends Command
                 File::put($actionsDirectory . '/' . $file, delete($module_name));
             }
             if ($file == 'Validation.php') {
-                File::put($ValidationDirectory . '/' . $file, validation($module_name));
+                File::put($ValidationDirectory . '/' . $file, validation($module_name, $fields));
             }
         }
 
         File::put($baseDirectory . $moduleName . '/Controller.php', controller($module_name));
         File::put($baseDirectory . $moduleName . '/Models/Model.php', model($module_name, $moduleName));
-        File::put($baseDirectory . $moduleName . '/Database/create_' . $table . '_table.php', migration($moduleName));
+        File::put($baseDirectory . $moduleName . '/Database/create_' . $table . '_table.php', migration($moduleName, $fields));
         File::put($baseDirectory . $moduleName . '/Route.php', routeContent($module_name, $moduleName));
         File::put($baseDirectory . $moduleName . '/api.http', api($moduleName));
-        File::put($baseDirectory . $moduleName . '/Database/Seeder.php', seeder($module_name, $moduleName));
+        File::put($baseDirectory . $moduleName . '/Database/Seeder.php', seeder($module_name, $moduleName, $fields));
         File::put($baseDirectory . $moduleName . '/Database/Factory.php', factory($module_name, $moduleName));
 
 
@@ -143,10 +159,10 @@ class ModelingDirectory extends Command
             $setupActionFiles = ['form_fields.js',  'index.js', 'Layout.vue', 'routes.js', 'store.js'];
             foreach ($setupActionFiles as $file) {
                 if ($file == 'form_fields.js') {
-                    File::put($ViewactionsDirectory . '/' . $file, ViewFormField($ViewModuleName));
+                    File::put($ViewactionsDirectory . '/' . $file, ViewFormField($ViewModuleName, $fields));
                 }
                 if ($file == 'index.js') {
-                    File::put($ViewactionsDirectory . '/' . $file, ViewIndex($ViewModuleName));
+                    File::put($ViewactionsDirectory . '/' . $file, ViewIndex($ViewModuleName, $role));
                 }
                 if ($file == 'Layout.vue') {
                     File::put($ViewactionsDirectory . '/' . $file, ViewLayout($ViewModuleName));

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\TodoList\Validations;
+namespace App\Modules\TestModule\Validations;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -25,6 +25,15 @@ class Validation extends FormRequest
         return response(['status' => 'validation_error', 'errors' => $errorPayload], 422);
     }
 
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException($this->validateError($validator->errors()));
+        if ($this->wantsJson() || $this->ajax()) {
+            throw new HttpResponseException($this->validateError($validator->errors()));
+        }
+        parent::failedValidation($validator);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -33,17 +42,13 @@ class Validation extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required',
+            'name' => 'required | sometimes',
+            'email' => 'required | sometimes',
+            'phone' => 'required | sometimes',
+            'address' => 'required | sometimes',
+            'active' => 'required | sometimes',
+            'image' => 'required | sometimes',
             'status' => ['sometimes', Rule::in(['active', 'inactive'])],
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException($this->validateError($validator->errors()));
-        if ($this->wantsJson() || $this->ajax()) {
-            throw new HttpResponseException($this->validateError($validator->errors()));
-        }
-        parent::failedValidation($validator);
     }
 }

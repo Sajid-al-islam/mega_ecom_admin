@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Illuminate\support\Str;
+use Faker\Factory as Faker;
 
 if (!function_exists('entityResponse')) {
     function entityResponse($data = null, $statusCode = 200, $status = 'success', $message = null)
@@ -67,4 +68,10 @@ if (!function_exists('uploader')) {
         $image->save(public_path($full_name));
         return $full_name;
     }
+}
+
+function facker()
+{
+
+    return   Faker::create();
 }

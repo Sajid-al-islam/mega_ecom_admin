@@ -19,13 +19,9 @@ export default [
                 "label": "Youtube link",
                 "value": "Youtube_link",
             },
-            // {
-            //     "label": "Vidio Url",
-            //     "value": "Vidio_Url",
-            // },
             {
-                "label": "Image",
-                "value": "Image",
+                "label": "M3u8 link",
+                "value": "m3u8_link",
             },
 
         ],

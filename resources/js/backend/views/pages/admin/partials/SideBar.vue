@@ -28,6 +28,14 @@
                 },
             ]" />
 
+            <side-bar-drop-down-menus :icon="`fa fa-plus`" :menu_title="`User Management`" :menus="[
+                {
+                    route_name: `AllUser`,
+                    title: `Users`,
+                },
+
+            ]" />
+
 
         </ul>
     </div>

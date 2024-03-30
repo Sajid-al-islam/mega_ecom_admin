@@ -6,7 +6,7 @@
                     <h5 class="text-capitalize">{{ param_id ? 'Update' : 'Create' }} new {{ route_prefix }}</h5>
                     <div>
                         <router-link class="btn btn-outline-warning btn-sm" :to="{ name: `All${route_prefix}` }">All {{
-                            route_prefix }}</router-link>
+            route_prefix }}</router-link>
                     </div>
                 </div>
                 <div class="card-body">
@@ -226,5 +226,3 @@ export default {
 
 }
 </script>
-
-

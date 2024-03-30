@@ -114,11 +114,11 @@ class ModelingDirectory extends Command
 
         File::put($baseDirectory . $moduleName . '/Controller.php', controller($module_name));
         File::put($baseDirectory . $moduleName . '/Models/Model.php', model($module_name, $moduleName));
-        File::put($baseDirectory . $moduleName . '/Database/create_' . $table . '_table.php', migration($moduleName, $fields));
+        File::put($baseDirectory . $moduleName . '/Database/create_' . $table . '_table.php', migration($module_name, $fields));
         File::put($baseDirectory . $moduleName . '/Route.php', routeContent($module_name, $moduleName));
         File::put($baseDirectory . $moduleName . '/api.http', api($moduleName));
         File::put($baseDirectory . $moduleName . '/Database/Seeder.php', seeder($module_name, $moduleName, $fields));
-        File::put($baseDirectory . $moduleName . '/Database/Factory.php', factory($module_name, $moduleName));
+
 
 
         if ($withVue) {
@@ -129,7 +129,6 @@ class ModelingDirectory extends Command
             $vue_module_dir = null;
 
             if (count($vue_format_dir) > 1) {
-
                 $ViewModuleName = end($vue_format_dir);
                 array_pop($vue_format_dir);
                 $vue_module_dir = implode('/', $vue_format_dir);
@@ -153,7 +152,7 @@ class ModelingDirectory extends Command
 
             // dd($module_name);
 
-            File::put($vueDirectory  . $ViewModuleName . '/All.vue', viewAll($ViewModuleName));
+            File::put($vueDirectory  . $ViewModuleName . '/All.vue', viewAll($ViewModuleName,$fields));
             File::put($vueDirectory  . $ViewModuleName . '/Form.vue', viewForm($ViewModuleName));
 
             $setupActionFiles = ['form_fields.js',  'index.js', 'Layout.vue', 'routes.js', 'store.js'];

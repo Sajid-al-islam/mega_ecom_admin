@@ -1,10 +1,11 @@
 import Layout from "./Layout.vue"
 import Dashboard from "../Dashboard.vue"
 
-import user_routes from "../management/user/setup/routes";
-
+//blog management routes
 import blog_category_routes from "../management/BlogManagement/Category/setup/routes";
 import blog_routes from "../management/BlogManagement/Blog/setup/routes";
+//user management routes
+import user_routes from "../management/UserManagement/User/setup/routes";
 
 
 
@@ -17,13 +18,11 @@ const routes = {
             component: Dashboard,
             name: 'adminDashboard',
         },
-
-        user_routes,
-
-
+        //blog management routes
         blog_category_routes,
         blog_routes,
-
+        //user management routes
+        user_routes,
     ]
 };
 

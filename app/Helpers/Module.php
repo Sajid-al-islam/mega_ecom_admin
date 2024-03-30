@@ -392,7 +392,7 @@ if (!function_exists('validation')) {
         return $content;
     }
 }
-if (!function_exists('Modules')) {
+if (!function_exists('api')) {
     function api($moduleName)
     {
         $route_name = Str::plural((Str::kebab($moduleName)));
@@ -532,7 +532,23 @@ if (!function_exists('model')) {
 if (!function_exists('migration')) {
     function migration($moduleName, $fields)
     {
-        $table_name = Str::plural((Str::snake($moduleName)));
+
+        $table_name = '';
+        $formated_module = explode('/', $moduleName);
+
+        if (count($formated_module) > 1) {
+
+
+            $moduleName = implode('/', $formated_module);
+            $moduleName = Str::replace("/", "\\", $moduleName);
+            $table_name = Str::plural((Str::snake($formated_module[count($formated_module) - 1])));
+        } else {
+            $table_name = Str::plural((Str::snake($moduleName)));
+            $moduleName = Str::replace("/", "\\", $moduleName);
+            // dd($moduleName);
+        }
+
+        // dd($table_name);
 
 
 
@@ -546,6 +562,7 @@ if (!function_exists('migration')) {
         return new class extends Migration
         {
             /**
+             php artisan migrate --path='\App\\Modules\\{$moduleName}\\Database\\create_{$table_name}_table.php'
              * Run the migrations.
              */
             public function up(): void
@@ -566,15 +583,21 @@ if (!function_exists('migration')) {
                         $type =  'string';
                     } elseif ($type == 'longtext') {
                         $type =  'text';
-                    } elseif ($type == 'number') {
+                    } elseif ($type == 'number' || $type == 'integer') {
                         $type = 'bigInteger';
-                    } elseif ($type == 'boolean') {
+                    } elseif ($type == 'boolean' || $type == 'tinyint') {
                         $type =  'tinyInteger';
+                    } elseif ($type == 'date') {
+                        $type =  'date';
+                    } elseif ($type == 'enum') {
+                        $type =  'enum';
+                    } elseif ($type == 'float') {
+                        $type =  'float';
                     } else {
                         $type =  'string';
                     }
 
-                    $content .= "            \$table->{$type}('{$fieldName[0]}')->nullable();\n";
+                    $content .= $type == 'enum' ? "            \$table->{$type}('{$fieldName[0]}',['value1','value2'])->nullable();\n" : "            \$table->{$type}('{$fieldName[0]}')->nullable();\n";
                 }
             }
         }
@@ -636,13 +659,14 @@ if (!function_exists('seeder')) {
         {
             /**
              * Run the database seeds.
-             php artisan db:seed --class=\App\\Modules\\{$moduleName}\\Database\\Seeder
+             php artisan db:seed --class="\App\\Modules\\{$moduleName}\\Database\\Seeder"
              */
             static \$model = \App\\Modules\\{$moduleName}\\Models\\Model::class;
             public function run(): void
             {
-                // self::\$model::factory()->count(100)->create();
+
                 self::\$model::truncate();
+                for (\$i = 1; \$i < 100; \$i++) {
                 self::\$model::create([
 
         EOD;
@@ -650,13 +674,14 @@ if (!function_exists('seeder')) {
             foreach ($formatField as $fieldName => $rule) {
                 if (is_array($rule)) {
                     foreach ($rule as $field => $value) {
-                        $content .= "            '$field' => '$value',\n";
+                        $content .= "            '$field' => facker()->name,\n";
                     }
                 }
             }
         }
         $content .= <<<EOD
-                ]);
+                    ]);
+                }
             }
         }
         EOD;
@@ -664,39 +689,6 @@ if (!function_exists('seeder')) {
     }
 }
 
-if (!function_exists('factory')) {
-    function factory($moduleName)
-    {
-        $formated_module = explode('/', $moduleName);
-        if (count($formated_module) > 1) {
-            $moduleName = implode('/', $formated_module);
-            $moduleName = Str::replace("/", "\\", $moduleName);
-        } else {
-            $moduleName = Str::replace("/", "\\", $moduleName);
-        }
-        $content = <<<"EOD"
-        <?php
-        namespace App\\Modules\\{$moduleName}\\Database;
-
-        use Illuminate\Database\Eloquent\Factories\Factory as FactoryClass;
-
-        class Factory extends FactoryClass
-        {
-            /**
-             * Run the database factory.
-             */
-            static \$model = \App\\Modules\\{$moduleName}\\Models\\Model::class;
-            public function definition()
-            {
-                return [
-                    'title' => \$this->faker->title,
-                ];
-            }
-        }
-        EOD;
-        return $content;
-    }
-}
 
 if (!function_exists('controller')) {
     function controller($moduleName)

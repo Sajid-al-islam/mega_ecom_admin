@@ -3,9 +3,9 @@
 use Illuminate\Support\Str;
 
 if (!function_exists('viewAll')) {
-    function viewAll($moduleName)
+    function viewAll($moduleName, $fields)
     {
-        $model = Str::plural((Str::kebab($moduleName)));
+
         $moduleName = Str::singular((Str::snake($moduleName)));
 
         $content = <<<"EOD"
@@ -45,7 +45,13 @@ if (!function_exists('viewAll')) {
                                                     <th class="w-10"><input type="checkbox" v-model="parent_item"
                                                     @click="toggleParentCheckbox"></th>
                                                     <th class="text-start">SL</th>
-                                                    <th>title</th>
+                EOD;
+        if (count($fields)) {
+            foreach ($fields as $fieldName) {
+                $content .=  "<th>  $fieldName[0] </th> \n";
+            }
+        }
+        $content .= <<<"EOD"
                                                     <th>status</th>
                                                     <th class="text-end">Action</th>
                                                 </tr>
@@ -57,7 +63,13 @@ if (!function_exists('viewAll')) {
                                                       :checked="child_items.includes(item.id)" type="checkbox">
                                                     </td>
                                                     <td class="text-start">{{ index + 1 }}</td>
-                                                    <td>{{ item.title }}</td>
+            EOD;
+        if (count($fields)) {
+            foreach ($fields as $fieldName) {
+                $content .=  "<th> {{ item.$fieldName[0]}} </th> \n";
+            }
+        }
+        $content .= <<<"EOD"
                                                     <td>{{ item.status }}</td>
                                                     <td style="width: 100px;">
                                                         <div class="d-flex justify-content-between gap-2">
@@ -297,11 +309,20 @@ if (!function_exists('ViewFormField')) {
                         case 'longtext':
                             $content .= "\t\ttype: \"textarea\",\n";
                             break;
+                        case 'date':
+                            $content .= "\t\ttype: \"date\",\n";
+                            break;
                         case 'number':
+                        case 'integer':
                             $content .= "\t\ttype: \"number\",\n";
+                            break;
+                        case 'file':
+                            $content .= "\t\ttype: \"file\",\n";
+                            $content .= "\t\tmultiple: false,\n";
                             break;
                         case 'select':
                         case 'boolean':
+                        case 'tinyint':
                             $content .= "\t\ttype: \"select\",\n";
                             $content .= "\t\tlabel: \"Select default $fieldName[0]\",\n";
                             $content .= "\t\tvalue: \"\",\n";

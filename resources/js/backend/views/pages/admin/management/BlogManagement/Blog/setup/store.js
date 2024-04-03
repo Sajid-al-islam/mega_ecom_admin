@@ -29,8 +29,8 @@ export const blog_setup_store = defineStore("blog_setup_store", {
             let response = await axios.get(this.api + id);
             response = response.data.data;
             this.single_data = response;
-            this.set_blog_tags =[]
-            this.set_categories_data =[]
+            this.set_blog_tags = []
+            this.set_categories_data = []
         },
 
         store: async function (form) {
@@ -77,7 +77,10 @@ export const blog_setup_store = defineStore("blog_setup_store", {
         },
 
         set_categories: async function (item) {
-
+            if (item == 'empty') {
+                this.set_categories_data = [];
+                return false
+            }
             let is_exist = this.set_categories_data.some(data => data.id === item.id);
             if (is_exist) {
                 this.set_categories_data = this.set_categories_data.filter(data => data.id !== item.id);
@@ -91,6 +94,10 @@ export const blog_setup_store = defineStore("blog_setup_store", {
         },
 
         set_tags: async function (item) {
+            if (item == 'empty') {
+                this.set_blog_tags = [];
+                return false
+            }
             let is_exist = this.set_blog_tags.some(data => data === item);
             if (!is_exist) {
                 this.set_blog_tags.push(item);

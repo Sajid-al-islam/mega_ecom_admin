@@ -48,7 +48,8 @@ if (!function_exists('viewAll')) {
                 EOD;
         if (count($fields)) {
             foreach ($fields as $fieldName) {
-                $content .=  "<th>  $fieldName[0] </th> \n";
+                $label = Str::of($fieldName[0])->snake()->replace('_', ' ');
+                $content .=  "<th>  $label </th> \n";
             }
         }
         $content .= <<<"EOD"
@@ -299,9 +300,10 @@ if (!function_exists('ViewFormField')) {
         if (count($fields)) {
             foreach ($fields as $fieldName) {
                 // dd($fieldName);
+                $label = Str::of($fieldName[0])->snake()->replace('_', ' ');
                 $content .= "\n\t{\n";
                 $content .= "\t\tname: \"$fieldName[0]\",\n";
-                $content .= "\t\tlabel: \"Enter your $fieldName[0]\",\n";
+                $content .= "\t\tlabel: \"Enter your $label\",\n";
 
                 if (count($fieldName) > 1) {
                     $type = $fieldName[1];
@@ -318,14 +320,13 @@ if (!function_exists('ViewFormField')) {
                             break;
                         case 'file':
                             $content .= "\t\ttype: \"file\",\n";
-                            $content .= "\t\tmultiple: false,\n";
+                            $content .= "\t\tmultiple: \"false\",\n";
                             break;
                         case 'select':
                         case 'boolean':
                         case 'tinyint':
                             $content .= "\t\ttype: \"select\",\n";
-                            $content .= "\t\tlabel: \"Select default $fieldName[0]\",\n";
-                            $content .= "\t\tvalue: \"\",\n";
+                            $content .= "\t\tlabel: \"Select default  $label\",\n";
                             $content .= "\t\tmultiple: false,\n";
                             $content .= "\t\tdata_list: [\n";
                             $content .= "\t\t\t{\n";

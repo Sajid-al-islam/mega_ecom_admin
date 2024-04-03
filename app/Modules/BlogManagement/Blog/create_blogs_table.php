@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('url')->nullable();
             $table->string('slug', 250)->nullable();
             $table->bigInteger('creator')->unsigned()->nullable();
-            $table->enum('privecy_status', ['public', 'private'])->default('public');
+            $table->string('privecy_status')->default('public');
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });

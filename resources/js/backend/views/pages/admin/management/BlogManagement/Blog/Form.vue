@@ -169,6 +169,15 @@ export default {
                 });
 
             }
+        } else {
+            this.form_fields.forEach((item) => {
+                item.value = null;
+            });
+
+            this.set_categories('empty')
+            this.set_tags('empty')
+
+
         }
 
     },

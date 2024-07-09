@@ -1,8 +1,9 @@
 <template>
-    <li :class="`mm-collapse ${is_show && 'mm-active'}`" style="border: 1px solid rgba(128, 128, 128, 0.267);">
-        <a @click.prevent="is_show = !is_show" class="has-arrow" href="#">
+    <li :class="`mm-collapse ${is_show && 'mm-active'}`">
+        <a class="has-arrow" href="#">
             <div class="parent-icon">
-                <i :class="icon"></i>
+                <!-- <i :class="icon"></i> -->
+                <img :src="icon_image" alt="">
             </div>
             <div class="menu-title">{{ menu_title }}</div>
         </a>
@@ -22,6 +23,7 @@ export default {
     props: {
         menu_title: String,
         menus: Array,
+        icon_image: String,
         icon: {
             type: String,
             default: ()=> "zmdi zmdi-dashboard",
@@ -30,6 +32,11 @@ export default {
     data: () => ({
         is_show: 0,
     }),
+    methods: {
+        toggle_menu: function(){
+            this.is_show = !this.is_show
+        }
+    }
 }
 </script>
 

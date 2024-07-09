@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid">
+    <div class="container">
 
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-4">
 
@@ -159,7 +159,7 @@
                                 <div>
                                     BDT:
                                     <b>
-                                        {{ parseInt(Math.random() * 10000) }}
+                                        {{ parseInt(Math.random() * 10000000) }}
                                     </b>
                                     TK
                                 </div>
@@ -171,7 +171,7 @@
                                 <div>
                                     BDT:
                                     <b>
-                                        {{ parseInt(Math.random() * 10000) }}
+                                        {{ parseInt(Math.random() * 10000000) }}
                                     </b>
                                     TK
                                 </div>
@@ -182,7 +182,9 @@
                                 </div>
                                 <div class="chart_donat_chart">
                                     <span class="donut"
-                                        data-peity='{ "fill": ["#fff", "rgb(255 255 255 / 12%)"], "innerRadius": 35, "radius": 25 }'>4/5</span>
+                                        data-peity='{ "fill": ["#fff", "rgb(255 255 255 / 12%)"], "innerRadius": 35, "radius": 25 }'>
+                                        {{ parseInt(Math.random() * 10) }}/{{ parseInt(Math.random() * 10) }}
+                                    </span>
                                 </div>
                             </div>
                         </div>

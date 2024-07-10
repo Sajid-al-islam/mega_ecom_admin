@@ -94,7 +94,7 @@ if (!function_exists('viewAll')) {
                                             </tbody>
                                             <tbody v-else>
                                             <tr>
-                                                <td colspan="8" class="alert alert-success">
+                                                <td colspan="8" class="">
                                                     No Data found
                                                 </td>
                                             </tr>

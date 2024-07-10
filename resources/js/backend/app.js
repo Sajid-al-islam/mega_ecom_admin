@@ -20,6 +20,8 @@ import admin_routes from "./views/pages/admin/partials/routes"
 // roters
 const router = createRouter({
     history: createWebHashHistory(),
+    linkActiveClass: 'active',
+    linkExactActiveClass: 'active',
     routes: [
         {
             path: "/",
@@ -37,6 +39,10 @@ router.beforeEach((to, from, next) => {
         window.sessionStorage.setItem('prevurl', to.href);
     next();
 });
+
+router.afterEach((to, from) => {
+    let el = document.querySelector(`[href="${to.href}"]`);
+})
 
 // render component
 const pinia = createPinia()

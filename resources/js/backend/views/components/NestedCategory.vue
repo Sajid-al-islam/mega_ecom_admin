@@ -52,7 +52,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped="">
 .category_card_dropdown .list {
     list-style-type: none;
     padding-left: 35px;
@@ -250,12 +250,9 @@ export default {
     background-size: contain;
     border: 1px solid #D8D6DE;
     appearance: none;
-    -webkit-print-color-adjust: exact;
-    color-adjust: exact;
 }
 
 .form-check-input[type=radio] {
     border-radius: 50%;
 }
 </style>
-

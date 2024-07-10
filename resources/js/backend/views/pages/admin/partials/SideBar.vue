@@ -71,27 +71,27 @@
             <side-bar-drop-down-menus :icon_image="`https://files.etek.com.bd/images/icon_product_management.png`"
                 :icon="`fa fa-plus`" :menu_title="`Products`" :menus="[
                     {
-                        route_name: `AllCategory`,
+                        route_name: `CreateProducts`,
                         title: `Create Product`,
                     },
                     {
-                        route_name: `AllCategory`,
+                        route_name: `AllProducts`,
                         title: `Products`,
                     },
                     {
-                        route_name: `AllCategory`,
+                        route_name: `AllCategories`,
                         title: `Category`,
                     },
                     {
-                        route_name: `AllBlog`,
+                        route_name: `AllBrands`,
                         title: `Brand`,
                     },
                     {
-                        route_name: `AllBlog`,
+                        route_name: `AllManufactures`,
                         title: `Manufacture`,
                     },
                     {
-                        route_name: `AllBlog`,
+                        route_name: `AllVarients`,
                         title: `Varient`,
                     },
                 ]" />
@@ -119,7 +119,7 @@
             <side-bar-drop-down-menus :icon_image="`https://files.etek.com.bd/images/icon_ecommerce.png`"
                 :icon="`fa fa-plus`" :menu_title="`e-Commerce`" :menus="[
                     {
-                        route_name: `AllCategory`,
+                        route_name: `AllEcommerceOrders`,
                         title: `Orders`,
                     },
                     {
@@ -253,31 +253,33 @@
                     },
                 ]" />
 
-            <side-bar-drop-down-menus :icon_image="`https://files.etek.com.bd/images/icon_report.png`"
-                :icon="`fa fa-plus`" :menu_title="`Reports`" :menus="[
-                    {
-                        route_name: `AllCategory`,
-                        title: `Blog Category`,
-                    },
-                    {
-                        route_name: `AllBlog`,
-                        title: `Blogs`,
-                    },
-                ]" />
+            <side-bar-single-menu
+                :menu_title="`Reports`"
+                :route_name="`ReportList`"
+                :icon_image="`https://files.etek.com.bd/images/icon_report.png`"
+            />
 
             <side-bar-drop-down-menus :icon_image="`https://files.etek.com.bd/images/icon_settings.png`"
                 :icon="`fa fa-plus`" :menu_title="`Configuration`" :menus="[
                     {
-                        route_name: `AllCategory`,
+                        route_name: `EmailConfig`,
                         title: `Email`,
                     },
                     {
-                        route_name: `AllBlog`,
+                        route_name: `SmsConfig`,
                         title: `SMS`,
                     },
                     {
-                        route_name: `AllBlog`,
+                        route_name: `PaymentGatewayConfig`,
                         title: `Payment Gateway`,
+                    },
+                    {
+                        route_name: `TelegramConfig`,
+                        title: `Telegram`,
+                    },
+                    {
+                        route_name: `TwilioConfig`,
+                        title: `Twilio`,
                     },
                 ]" />
 

@@ -9,7 +9,7 @@
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
                                 <p class="mb-0 text-white">INCOME</p>
-                                <h4 class="my-1 text-white">
+                                <h4 class="my-1 text-white  text-nowrap">
                                     ৳
                                     <b>
                                         {{ parseInt(Math.random() * 10000000) }}
@@ -20,7 +20,7 @@
                                     <sub class="text-info">
                                         {{ new Date().toDateString() }}
                                     </sub>
-                                    <span>
+                                    <span class="text-nowrap">
                                         ৳
                                         <b>
                                             {{ parseInt(Math.random() * 1000000) }}
@@ -42,7 +42,7 @@
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
                                 <p class="mb-0 text-white">Expense</p>
-                                <h4 class="my-1 text-white">
+                                <h4 class="my-1 text-white text-nowrap">
                                     ৳
                                     <b>
                                         {{ parseInt(Math.random() * 10000000) }}
@@ -53,7 +53,7 @@
                                     <sub class="text-info">
                                         {{ new Date().toDateString() }}
                                     </sub>
-                                    <span>
+                                    <span class="text-nowrap">
                                         ৳
                                         <b>
                                             {{ parseInt(Math.random() * 1000000) }}
@@ -75,7 +75,7 @@
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
                                 <p class="mb-0 text-white">Profit</p>
-                                <h4 class="my-1 text-white">
+                                <h4 class="my-1 text-white text-nowrap">
                                     ৳
                                     <b>
                                         {{ parseInt(Math.random() * 10000000) }}
@@ -86,7 +86,7 @@
                                     <sub class="text-info">
                                         {{ new Date().toDateString() }}
                                     </sub>
-                                    <span>
+                                    <span class="text-nowrap">
                                         ৳
                                         <b>
                                             {{ parseInt(Math.random() * 1000000) }}
@@ -108,7 +108,7 @@
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
                                 <p class="mb-0 text-white">DUE</p>
-                                <h4 class="my-1 text-white">
+                                <h4 class="my-1 text-white text-nowrap">
                                     ৳
                                     <b>
                                         {{ parseInt(Math.random() * 10000000) }}
@@ -119,7 +119,7 @@
                                     <sub class="text-info">
                                         {{ new Date().toDateString() }}
                                     </sub>
-                                    <span>
+                                    <span class="text-nowrap">
                                         ৳
                                         <b>
                                             {{ parseInt(Math.random() * 1000000) }}
@@ -144,7 +144,7 @@
             </div>
             <div class="card-body">
                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-4 g-3">
-                    <div class="col" v-for="i in 4" :key="i">
+                    <div class="col py-4" v-for="i in 4" :key="i">
                         <div class="p-3 text-center border radius-10 analytic_compare_card">
                             <div class="analytics_arrow">
                                 <img v-if="i % 2 == 0" src="https://files.etek.com.bd/images/arrow_up.png" alt="">
@@ -200,7 +200,7 @@
             </div>
             <div class="card-body">
                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-4 g-3">
-                    <div class="col" v-for="i in 4" :key="i">
+                    <div class="col py-4" v-for="i in 4" :key="i">
                         <div class="p-3 text-center border radius-10 analytic_compare_card">
                             <div class="analytics_arrow">
                                 <img v-if="i % 2 == 0" src="https://files.etek.com.bd/images/arrow_up.png" alt="">

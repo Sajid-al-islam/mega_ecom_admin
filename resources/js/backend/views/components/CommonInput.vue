@@ -74,7 +74,6 @@ export default {
         },
         value: {
             required: false,
-            type: String,
         },
         data_list: {
             required: false,

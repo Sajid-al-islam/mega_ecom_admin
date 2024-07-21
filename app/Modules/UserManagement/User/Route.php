@@ -11,7 +11,6 @@ Route::prefix('v1')->middleware('auth:api')->group(function () {
 
     Route::prefix('users')->group(function () {
         Route::get('/', [UserController::class, 'index']);
-        Route::get('{slug}', [UserController::class, 'show']);
         Route::post('store', [UserController::class, 'store']);
         Route::post('update/{id}', [UserController::class, 'update']);
         Route::post('soft-delete', [UserController::class, 'softDelete']);
@@ -19,6 +18,7 @@ Route::prefix('v1')->middleware('auth:api')->group(function () {
         Route::post('restore', [UserController::class, 'restore']);
         Route::post('import', [UserController::class, 'import']);
         Route::post('bulk-actions', [UserController::class, 'bulkAction']);
+        Route::get('/{slug}', [UserController::class, 'show']);
     });
 
     Route::prefix('customers')->group(function () {

@@ -4,7 +4,8 @@
         <search/>
     </div>
     <div>
-        <button class="btn btn-outline-success btn-sm">
+        <button @click.prevent="set_show_filter_canvas(true)"
+            class="btn btn-outline-success btn-sm">
             <i class="fa fa-gear"></i>
         </button>
     </div>
@@ -12,11 +13,16 @@
 <script>
 import Search from './Search.vue';
 import setup from '../../setup';
+import { mapActions } from 'pinia';
+import { store } from '../../setup/store';
 export default {
     components: { Search },
     data: () => ({
         setup,
-    })
+    }),
+    methods: {
+        ...mapActions(store, ['set_show_filter_canvas'])
+    }
 }
 </script>
 <style lang="">

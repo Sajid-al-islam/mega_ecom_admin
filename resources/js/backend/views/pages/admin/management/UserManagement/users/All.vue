@@ -50,7 +50,7 @@
                     <div class="mx-3" v-if="typeof all == `object`">
                         <pagination
                             :data="all"
-                            :get_data="get_all_user"
+                            :get_data="get_all_data"
                             :set_paginate="set_paginate"
                             :set_page="set_page" />
                     </div>
@@ -60,81 +60,56 @@
                 </div>
             </div>
         </div>
-
-        <div class="loader export_loader">
-            <div class="loader_body">
-                <div class="progress"></div>
-                <div class="load_amount">
-                    <h4>0</h4>
-                    <h5>%</h5>
-                </div>
-            </div>
-        </div>
+        <export-all-loader />
     </div>
 </template>
 
 <script>
+/** plugins */
 import { mapActions, mapState, mapWritableState } from 'pinia'
-import { store as user_setup_store } from './setup/store';
-import get_all_user from "./setup/store/async_actions/all";
+import { store as data_store } from './setup/store';
+import setup from "./setup";
+
+/** helper and actions */
+import get_all_data from "./setup/store/async_actions/all";
+
+/** components */
 import TableRowAction from './components/all_data_page/TableRowAction.vue';
 import AllPageHeader from './components/all_data_page/AllPageHeader.vue';
 import AllPageFooterActions from './components/all_data_page/AllPageFooterActions.vue';
 import SelectSingle from './components/all_data_page/select_data/SelectSingle.vue';
 import SelectAll from './components/all_data_page/select_data/SelectAll.vue';
-import setup from "./setup";
+import ExportAllLoader from './components/all_data_page/ExportAllLoader.vue';
+
 export default {
-    components: {
-        TableRowAction,
-        AllPageHeader,
-        AllPageFooterActions,
-        SelectSingle,
-        SelectAll,
-    },
     data: () => ({
-        route_prefix: '',
-        page_title: '',
-        parent_item: false,
-        child_items: [],
         setup,
     }),
     created: async function () {
-        this.paginate = 5;
-        await this.get_all_user();
+        this.paginate = 10;
+        await this.get_all_data();
     },
     methods: {
-        ...mapActions(user_setup_store, {
-            set_page: 'set_page',
-            set_paginate: 'set_paginate',
-            delete_data: 'delete',
-            bulk_action: 'bulk_action',
-        }),
-        get_all_user,
-        toggleParentCheckbox() {
-            this.child_items = event.target.checked ? this.all_data.data.map(item => item.id) : []
-        },
-        toggleChildCheckbox(id) {
-            let isChecked = event.target.checked
-            if (isChecked) {
-                this.child_items.push(id)
-            } else {
-                this.child_items = this.child_items.filter(item => item != id)
-            }
-
-        },
-        bulkActions(action) {
-            this.bulk_action(action, this.child_items)
-            this.parent_item = false
-            this.child_items = []
-        }
-
+        ...mapActions(data_store,[
+            'set_page', // needs in pagination props
+            'set_paginate', // needs in pagination props
+        ]),
+        get_all_data,
     },
     computed: {
         ...mapWritableState(user_setup_store, {
             all: 'all',
             paginate: 'paginate',
         })
-    }
+    },
+    components: {
+        TableRowAction,
+        AllPageHeader,
+        AllPageFooterActions,
+        SelectSingle,
+        SelectAll,
+        ExportAllLoader,
+    },
 }
 </script>
 

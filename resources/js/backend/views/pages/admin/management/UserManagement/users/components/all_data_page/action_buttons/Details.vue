@@ -1,12 +1,29 @@
 <template lang="">
-    <a href="/users/destroy/2" class="border-secondary">
+    <router-link
+        :to="{
+            name: `Details${setup.route_prefix}`,
+            params: { id: item.slug }
+        }"
+        class="border-secondary">
         <i class="fa fa-eye text-secondary"></i>
         Show
-    </a>
+    </router-link>
 </template>
 <script>
-export default {
+import setup from '../../../setup';
 
+export default {
+    props: {
+        item: {
+            type: Object,
+            default: {
+                slug: 1,
+            },
+        }
+    },
+    data: () => ({
+        setup,
+    })
 }
 </script>
 <style lang="">

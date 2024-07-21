@@ -34,7 +34,6 @@ let execute = async () => {
             sort_by_col: state.sort_by_col.get(),
             sort_type: state.sort_type.get(),
             status: state.status.get(),
-            select_fields: state.select_fields.get(),
         },
     };
 
@@ -49,8 +48,19 @@ let execute = async () => {
         full_url.searchParams.set(param, qparams.params[param]);
     }
 
+    state.select_fields.get().forEach(function(el, index){
+        full_url.searchParams.set(`selected_fields[${index}]`, el);
+    });
+
+    let index = 0;
     for (let param in state.filter_criteria.get()) {
-        full_url.searchParams.set(param, state.filter_criteria.get()[param]);
+        let value = state.filter_criteria.get()[param];
+        if(value){
+            full_url.searchParams.set(`filter_criterias[${index}][key]`, param);
+            full_url.searchParams.set(`filter_criterias[${index}][value]`, value);
+            index++;
+            full_url.searchParams.set(param, value)
+        }
     }
 
     state.is_loading.set(true);

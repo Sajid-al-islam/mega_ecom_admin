@@ -1,7 +1,7 @@
 <template>
-    <div>
-        <side-bar></side-bar>
-        <div class="page-body">
+    <!-- <side-bar></side-bar> -->
+    <div class="page-body">
+        <div class="container-fluid">
             <router-view></router-view>
         </div>
     </div>
@@ -11,7 +11,6 @@
 import SideBar from './SideBar.vue';
 export default {
     components: { SideBar },
-
 }
 </script>
 

@@ -1,41 +1,74 @@
 export default [
     {
         name: "name",
-        label: "Enter your name",
+        label: "name",
         type: "text",
         value: "",
     },
 
     {
         name: "email",
-        label: "Enter your email",
+        label: "email",
         type: "text",
         value: "",
     },
     {
         name: "password",
-        label: "Enter your password",
+        label: "password",
         type: "text",
         value: "",
     },
 
     {
-        name: "phone",
-        label: "Enter your phone",
+        name: "phone_number",
+        label: "phone",
         type: "text",
         value: "",
     },
 
     {
-        name: "age",
-        label: "Enter your age",
-        type: "number",
-        value: "",
+        name: "role_serial",
+        label: "User Role",
+        type: "select",
+        data_list: [
+            {
+                label: 'admin',
+                value: 2,
+            },
+            {
+                label: 'customer',
+                value: 3,
+            },
+            {
+                label: 'sales',
+                value: 4,
+            },
+            {
+                label: 'account',
+                value: 5,
+            },
+            {
+                label: 'retailer',
+                value: 6,
+            },
+            {
+                label: 'supplier',
+                value: 7,
+            },
+            {
+                label: 'delivary man',
+                value: 8,
+            },
+            {
+                label: 'employee',
+                value: 9,
+            },
+        ],
     },
 
     {
-        name: "image",
-        label: "Enter your image",
+        name: "photo",
+        label: "photo",
         type: "file",
         multiple: false,
         value: "",

@@ -18,11 +18,11 @@ import report_routes from "../management/Report/setup/routes"
 import ecommer_order_routes from "../management/Ecommerce/Order/setup/routes"
 
 const routes = {
-    path: '/dashboard',
+    path: '',
     component: Layout,
     children: [
         {
-            path: '',
+            path: 'dashboard',
             component: Dashboard,
             name: 'adminDashboard',
         },

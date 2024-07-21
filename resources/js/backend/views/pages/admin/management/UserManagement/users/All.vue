@@ -1,51 +1,55 @@
 <template>
-    <div class="container-fluid">
+    <div>
         <div class="row">
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header py-1 d-flex align-items-center justify-content-between">
                         <all-page-header />
                     </div>
-                    <div class="card-body table-responsive table_responsive h-80vh">
-                        <table class="table table-hover text-center table-bordered">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th class="w-10 text-center">
-                                        <select-all />
-                                    </th>
-                                    <th class="w-10"> ID </th>
-                                    <th> name </th>
-                                    <th> email </th>
-                                    <th> phone </th>
-                                    <th> image </th>
-                                </tr>
-                            </thead>
-                            <tbody v-if="all?.data?.length">
-                                <tr v-for="(item) in all?.data" :key="item.id"
-                                    :class="`table_rows table_row_${item.id}`">
-                                    <td>
-                                        <table-row-action></table-row-action>
-                                    </td>
-                                    <td>
-                                        <select-single :data="item" />
-                                    </td>
-                                    <td>
-                                        {{ item.id }}
-                                    </td>
-                                    <td>
-                                        {{ item.name }}
-                                    </td>
-                                    <td>
-                                        {{ item.email }}
-                                    </td>
-                                    <td>
-                                        {{ item.phone_number }}
-                                    </td>
-                                    <td><img src="/avatar.png" alt="" style="height: 30px;"></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="card-body">
+                        <div class="table-responsive table_responsive card_body_fixed_height">
+                            <table class="table table-hover text-center table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th class="w-10 text-center">
+                                            <select-all />
+                                        </th>
+                                        <th class="w-10"> ID </th>
+                                        <th> name </th>
+                                        <th> email </th>
+                                        <th> phone </th>
+                                        <th> image </th>
+                                    </tr>
+                                </thead>
+                                <tbody v-if="all?.data?.length">
+                                    <tr v-for="(item) in all?.data" :key="item.id"
+                                        :class="`table_rows table_row_${item.id}`">
+                                        <td>
+                                            <table-row-action :item="item"></table-row-action>
+                                        </td>
+                                        <td>
+                                            <select-single :data="item" />
+                                        </td>
+                                        <td>
+                                            {{ item.id }}
+                                        </td>
+                                        <td>
+                                            <quick-view-column :item="item">
+                                                {{ item.name }}
+                                            </quick-view-column>
+                                        </td>
+                                        <td>
+                                            {{ item.email }}
+                                        </td>
+                                        <td>
+                                            {{ item.phone_number }}
+                                        </td>
+                                        <td><img src="/avatar.png" alt="" style="height: 30px;"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="mx-3" v-if="typeof all == `object`">
                         <pagination
@@ -61,6 +65,8 @@
             </div>
         </div>
         <export-all-loader />
+        <quick-view />
+        <filter-data />
     </div>
 </template>
 
@@ -80,6 +86,10 @@ import AllPageFooterActions from './components/all_data_page/AllPageFooterAction
 import SelectSingle from './components/all_data_page/select_data/SelectSingle.vue';
 import SelectAll from './components/all_data_page/select_data/SelectAll.vue';
 import ExportAllLoader from './components/all_data_page/ExportAllLoader.vue';
+import QuickView from './components/canvas/QuickView.vue';
+import QuickViewColumn from './components/all_data_page/QuickViewColumn.vue';
+import FilterData from './components/canvas/FilterData.vue';
+import DropDownEl from './components/dropdown/DropDownEl.vue';
 
 export default {
     data: () => ({
@@ -97,7 +107,7 @@ export default {
         get_all_data,
     },
     computed: {
-        ...mapWritableState(user_setup_store, {
+        ...mapWritableState(data_store, {
             all: 'all',
             paginate: 'paginate',
         })
@@ -109,6 +119,10 @@ export default {
         SelectSingle,
         SelectAll,
         ExportAllLoader,
+        QuickView,
+        QuickViewColumn,
+        FilterData,
+        DropDownEl,
     },
 }
 </script>

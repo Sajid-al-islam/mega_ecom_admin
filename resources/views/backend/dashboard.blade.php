@@ -24,8 +24,8 @@
     <link href="{{ asset('backend/assets/css/app-style.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="/backend/assets/css/custom/custom.css">
 
-    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/42.0.0/ckeditor5.css" />
-    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+    {{-- <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/42.0.0/ckeditor5.css" />
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script> --}}
 
     <script src="/plugins/sweet_alert.js" defer></script>
     <script src="/backend/assets/js/jquery.min.js"></script>

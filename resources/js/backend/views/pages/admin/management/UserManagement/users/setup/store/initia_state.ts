@@ -12,8 +12,11 @@ export const initialState = {
     /*_______________*/
     /* data filters */
 
-    role: 'all',
-    select_fields: 'id, name, email, image',
+    select_fields: ['id', 'name', 'email', 'photo', 'phone_number','slug', 'created_at', 'status'],
+    sort_by_cols: ['id', 'name', 'email', 'phone_number', 'created_at', 'status'],
+    sort_by_col: 'id',
+    sort_type: 'DESC',
+
     filter_criteria: {} as anyObject,
     all_data_count: 0, // total data in database
     page: 1,
@@ -23,8 +26,6 @@ export const initialState = {
     orderByCol: 'id',
     orderByAsc: true,
 
-    sort_by_col: 'id',
-    sort_type: 'ASC',
 
     status: 'active', // active | inactive
 
@@ -42,7 +43,7 @@ export const initialState = {
     /* trigger showing data form canvas */
     show_create_canvas: false,
     show_edit_canvas: false,
-    off_canvas_details: false,
+    show_details_canvas: false,
 
     /*_______________*/
     cached: 0,

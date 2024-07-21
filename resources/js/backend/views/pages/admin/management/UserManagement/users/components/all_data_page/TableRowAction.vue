@@ -3,16 +3,16 @@
     <div class="table_action_btns">
         <ul>
             <li>
-                <details-btn />
+                <details-btn :item="item" />
             </li>
             <li>
-                <edit/>
+                <edit :item="item"/>
             </li>
             <li>
-                <deactive/>
+                <deactive :item="item"/>
             </li>
             <li>
-                <destroy/>
+                <destroy :item="item"/>
             </li>
 
             <slot />
@@ -26,6 +26,12 @@ import Edit from './action_buttons/Edit.vue';
 import Deactive from './action_buttons/Deactive.vue';
 import Destroy from './action_buttons/Destroy.vue';
 export default {
+    props: {
+        item: {
+            type: Object,
+            default: {},
+        }
+    },
     components: {
         DetailsBtn: Details,
         Edit,

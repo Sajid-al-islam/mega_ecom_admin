@@ -26,30 +26,48 @@ if (!function_exists('all')) {
         {
             static \$model = \App\Modules\\{$moduleName}\\Models\\Model::class;
 
-            public static function execute()
+            public static function execute(\$request)
             {
                 try {
-                    // dd(request()->all());
-                    \$offset = request()->input('offset') ?? 10;
-                    \$condition = [];
+                    \$pageLimit = request()->input('limit') ?? 10;
+                    \$orderByColumn = request()->input('sort_by_col');
+                    \$orderByType = request()->input('sort_type');
+                    \$status = request()->input('status');
+                    \$fields = request()->input('fields');
                     \$with = [];
+                    \$condition = [];
+
                     \$data = self::\$model::query();
-                    if (request()->has('status') && request()->input('status')) {
-                        \$condition['status'] = request()->input('status');
-                    }
 
                     if (request()->has('search') && request()->input('search')) {
-                        \$data = \$data->where('title', 'like', '%' . request()->input('search') . '%');
+                        \$searchKey = request()->input('search');
+                        \$data = \$data->where(function (\$q) use (\$searchKey) {
+                            \$q->where('title', \$searchKey);
+                            \$q->orWhere('description', 'like', '%' . \$searchKey . '%');
+                        });
                     }
 
                     if (request()->has('get_all') && (int)request()->input('get_all') === 1) {
-                        \$data = \$data->with(\$with)->where(\$condition)->latest()->get();
+                        \$data = \$data
+                            ->with(\$with)
+                            ->select(\$fields)
+                            ->where(\$condition)
+                            ->where('status', \$status)
+                            ->limit(\$pageLimit)
+                            ->orderBy(\$orderByColumn, \$orderByType)
+                            ->get();
                     } else {
-                        \$data = \$data->with(\$with)->where(\$condition)->latest()->paginate(\$offset);
+                        \$data = \$data
+                            ->with(\$with)
+                            ->select(\$fields)
+                            ->where(\$condition)
+                            ->where('status', \$status)
+                            ->orderBy(\$orderByColumn, \$orderByType)
+                            ->paginate(\$pageLimit);
                     }
                     return entityResponse(\$data);
                 } catch (\Exception \$e) {
-                    return messageResponse(\$e->getMessage(), 500, 'server_error');
+                    return messageResponse(\$e->getMessage(),[], 500, 'server_error');
                 }
             }
         }
@@ -86,36 +104,32 @@ if (!function_exists('bulkActions')) {
             public static function execute()
             {
                 try {
-                    if (request()->input('action') == 'active' || request()->input('action') == 'inactive') {
-                        if (request()->input('data') && count(request()->input('data'))) {
-
-                            \$data = request()->input('data');
-                            foreach (\$data as \$item) {
-                                \$getItem = self::\$model::find(\$item);
-
-                                if (\$getItem) {
-                                    \$getItem->status = request()->input('action');
-                                    \$getItem->update();
-                                }
-                            }
+                    if (request()->input('action') == 'active') {
+                        if (request()->input('ids') && count(request()->input('ids'))) {
+                            \$ids = request()->input('ids');
+                            self::\$model::whereIn('id', \$ids)->update(['status' => 'active']);
+                        }
+                        return messageResponse("Items are activeted Successfully ");
+                    }
+                    if (request()->input('action') == 'inactive') {
+                        if (request()->input('ids') && count(request()->input('ids'))) {
+                            \$ids = request()->input('ids');
+                            self::\$model::whereIn('id', \$ids)->update(['status' => 'inactive']);
+                            return messageResponse("Items are inactiveted Successfully ");
                         }
                     }
 
                     if (request()->input('action') == 'delete') {
-                        if (request()->input('data') && count(request()->input('data'))) {
-                            \$data = request()->input('data');
-                            foreach (\$data as \$item) {
-                                \$getItem = self::\$model::find(\$item);
-                                if (\$getItem) {
-                                    \$getItem->delete();
-                                }
-                            }
+                        if (request()->input('ids') && count(request()->input('ids'))) {
+                            \$ids = request()->input('ids');
+                            self::\$model::whereIn('id', \$ids)->delete();
+                            return messageResponse("Items are deleted Successfully ");
                         }
                     }
 
-                    return messageResponse("Items are Successfully " . request()->input('action'), 200, 'success');
+
                 } catch (\Exception \$e) {
-                    return messageResponse(\$e->getMessage(), 500, 'server_error');
+                    return messageResponse(\$e->getMessage(),[], 500, 'server_error');
                 }
             }
         }
@@ -147,22 +161,19 @@ if (!function_exists('store')) {
 
             namespace App\\Modules\\{$moduleName}\\Actions;
 
-            use App\\Modules\\{$moduleName}\\Validations\\Validation;
-
-
             class Store
             {
                 static \$model = \App\\Modules\\{$moduleName}\\Models\\Model::class;
 
-                public static function execute(Validation \$request)
+                public static function execute(\$request)
                 {
                     try {
                         \$requestData = \$request->validated();
-                        if (self::\$model::query()->create(\$requestData)) {
-                            return messageResponse('Item added successfully', 201);
+                        if (\$data = self::\$model::query()->create(\$requestData)) {
+                            return messageResponse('Item added successfully', \$data, 201);
                         }
                     } catch (\Exception \$e) {
-                        return messageResponse(\$e->getMessage(), 500, 'server_error');
+                        return messageResponse(\$e->getMessage(),[], 500, 'server_error');
                     }
                 }
             }
@@ -190,23 +201,21 @@ if (!function_exists('update')) {
 
             namespace App\\Modules\\{$moduleName}\\Actions;
 
-            use App\\Modules\\{$moduleName}\\Validations\\Validation;
-
             class Update
             {
                 static \$model = \App\\Modules\\{$moduleName}\\Models\\Model::class;
 
-                public static function execute(Validation \$request,\$id)
+                public static function execute(\$request,\$slug)
                 {
                     try {
-                        if (!\$data = self::\$model::query()->where('id', \$id)->first()) {
-                            return messageResponse('Data not found...', 404, 'error');
+                        if (!\$data = self::\$model::query()->where('slug', \$slug)->first()) {
+                            return messageResponse('Data not found...',\$data, 404, 'error');
                         }
                         \$requestData = \$request->validated();
                         \$data->update(\$requestData);
-                        return messageResponse('Item updated successfully');
+                        return messageResponse('Item updated successfully',\$data, 201);
                     } catch (\Exception \$e) {
-                        return messageResponse(\$e->getMessage(), 500, 'server_error');
+                        return messageResponse(\$e->getMessage(),[], 500, 'server_error');
                     }
                 }
             }
@@ -240,16 +249,20 @@ if (!function_exists('show')) {
             {
                 static \$model = \App\\Modules\\{$moduleName}\\Models\\Model::class;
 
-                public static function execute(\$id)
+                public static function execute(\$slug)
                 {
                     try {
                         \$with = [];
-                        if (!\$data = self::\$model::query()->with(\$with)->where('id', \$id)->first()) {
-                            return messageResponse('Data not found...', 404, 'error');
+                        \$fields = request()->input('fields') ?? [];
+                        if (empty(\$fields)) {
+                            \$fields = ['*'];
+                        }
+                        if (!\$data = self::\$model::query()->with(\$with)->select(\$fields)->where('slug', \$slug)->first()) {
+                            return messageResponse('Data not found...',\$data, 404, 'error');
                         }
                         return entityResponse(\$data);
                     } catch (\Exception \$e) {
-                        return messageResponse(\$e->getMessage(), 500, 'server_error');
+                        return messageResponse(\$e->getMessage(),[], 500, 'server_error');
                     }
                 }
             }
@@ -259,8 +272,8 @@ if (!function_exists('show')) {
     }
 }
 
-if (!function_exists('delete')) {
-    function delete($moduleName)
+if (!function_exists('softDelete')) {
+    function softDelete($moduleName)
     {
         $formated_module = explode('/', $moduleName);
 
@@ -277,20 +290,154 @@ if (!function_exists('delete')) {
 
             namespace App\\Modules\\{$moduleName}\\Actions;
 
-            class Delete
+            class SoftDelete
             {
                 static \$model = \App\\Modules\\{$moduleName}\\Models\\Model::class;
 
-                public static function execute(\$id)
+                public static function execute()
                 {
                     try {
-                        if (!\$data=self::\$model::find(\$id)) {
-                            return messageResponse('Data not found...', 404, 'error');
+                        if (!\$data = self::\$model::where('slug', request()->slug)->first()) {
+                            return messageResponse('Data not found...', \$data, 404, 'error');
+                        }
+                        \$data->status = 'inactive';
+                        \$data->update();
+                        return messageResponse('Item Successfully soft deleted', [], 200, 'success');
+                    } catch (\Exception \$e) {
+                        return messageResponse(\$e->getMessage(),[], 500, 'server_error');
+                    }
+                }
+            }
+            EOD;
+        return $content;
+    }
+}
+if (!function_exists('restore')) {
+    function restore($moduleName)
+    {
+        $formated_module = explode('/', $moduleName);
+
+        if (count($formated_module) > 1) {
+
+            $moduleName = implode('/', $formated_module);
+            $moduleName = Str::replace("/", "\\", $moduleName);
+        } else {
+            $moduleName = Str::replace("/", "\\", $moduleName);
+        }
+
+        $content = <<<"EOD"
+            <?php
+
+            namespace App\\Modules\\{$moduleName}\\Actions;
+
+            class Restore
+            {
+                static \$model = \App\\Modules\\{$moduleName}\\Models\\Model::class;
+
+                public static function execute()
+                {
+                    try {
+                        if (!\$data = self::\$model::where('slug', request()->slug)->first()) {
+                            return messageResponse('Data not found...', \$data, 404, 'error');
+                        }
+                        \$data->status = 'active';
+                        \$data->update();
+                        return messageResponse('Item Successfully  Restored', \$data, 200, 'success');
+                    } catch (\Exception \$e) {
+                        return messageResponse(\$e->getMessage(),[], 500, 'server_error');
+                    }
+                }
+            }
+            EOD;
+        return $content;
+    }
+}
+
+if (!function_exists('import')) {
+    function import($moduleName, $fields)
+    {
+        $formated_module = explode('/', $moduleName);
+
+        if (count($formated_module) > 1) {
+
+            $moduleName = implode('/', $formated_module);
+            $moduleName = Str::replace("/", "\\", $moduleName);
+        } else {
+            $moduleName = Str::replace("/", "\\", $moduleName);
+        }
+
+
+
+        $content = <<<"EOD"
+            <?php
+
+            namespace App\\Modules\\{$moduleName}\\Actions;
+
+            class Import
+            {
+                static \$model = \App\\Modules\\{$moduleName}\\Models\\Model::class;
+
+                public static function execute()
+                {
+                    try {
+                        foreach (request()->data as \$row) {
+                             self::\$model::create([
+            EOD;
+
+        foreach ($fields as $field) {
+            $content .= <<<EOD
+
+                                "$field[0]" => \$row['$field[0]'],\n
+            EOD;
+        }
+
+        $content .= <<<EOD
+
+                            ]);
+                        }
+                        return messageResponse('Item Successfully updated', [], 200, 'success');
+                    } catch (\Exception \$e) {
+                        return messageResponse(\$e->getMessage(),[], 500, 'server_error');
+                    }
+                }
+            }
+            EOD;
+        return $content;
+    }
+}
+
+if (!function_exists('destroy')) {
+    function destroy($moduleName)
+    {
+        $formated_module = explode('/', $moduleName);
+
+        if (count($formated_module) > 1) {
+
+            $moduleName = implode('/', $formated_module);
+            $moduleName = Str::replace("/", "\\", $moduleName);
+        } else {
+            $moduleName = Str::replace("/", "\\", $moduleName);
+        }
+
+        $content = <<<"EOD"
+            <?php
+
+            namespace App\\Modules\\{$moduleName}\\Actions;
+
+            class Destroy
+            {
+                static \$model = \App\\Modules\\{$moduleName}\\Models\\Model::class;
+
+                public static function execute(\$slug)
+                {
+                    try {
+                        if (!\$data=self::\$model::where('slug', \$slug)->first()) {
+                            return messageResponse('Data not found...',\$data, 404, 'error');
                         }
                         \$data->delete();
-                        return messageResponse('Item Successfully deleted', 200, 'success');
+                        return messageResponse('Item Successfully deleted',[], 200, 'success');
                     } catch (\Exception \$e) {
-                        return messageResponse(\$e->getMessage(), 500, 'server_error');
+                        return messageResponse(\$e->getMessage(),[], 500, 'server_error');
                     }
                 }
             }
@@ -384,6 +531,170 @@ if (!function_exists('validation')) {
         }
         $content .= <<<EOD
                         'status' => ['sometimes', Rule::in(['active', 'inactive'])],
+                    ];
+                }
+            }
+            EOD;
+
+        return $content;
+    }
+}
+if (!function_exists('BulkActionsValidation')) {
+    function BulkActionsValidation($moduleName, $fields)
+    {
+
+
+        $formated_module = explode('/', $moduleName);
+
+        if (count($formated_module) > 1) {
+
+            $moduleName = implode('/', $formated_module);
+            $moduleName = Str::replace("/", "\\", $moduleName);
+        } else {
+            $moduleName = Str::replace("/", "\\", $moduleName);
+        }
+
+        $formatField = [];
+        if (count($fields)) {
+            foreach ($fields as $field) {
+                $formatField[] = [
+                    $field[0] => 'required'
+                ];
+            }
+        }
+        // dd($formatField);
+
+        $content = <<<"EOD"
+            <?php
+
+            namespace App\\Modules\\{$moduleName}\\Validations;
+
+            use Illuminate\Contracts\Validation\Validator;
+            use Illuminate\Foundation\Http\FormRequest;
+            use Illuminate\Http\Exceptions\HttpResponseException;
+            use Illuminate\Validation\Rule;
+
+            class BulkActionsValidation extends FormRequest
+            {
+                /**
+                 * Determine if the  is authorized to make this request.
+                 */
+                public function authorize(): bool
+                {
+                    return true;
+                }
+                /**
+                 * validateError to make this request.
+                 */
+                public function validateError(\$data)
+                {
+                    \$errorPayload =  \$data->getMessages();
+                    return response(['status' => 'validation_error', 'errors' => \$errorPayload], 422);
+                }
+
+                protected function failedValidation(Validator \$validator)
+                {
+                    throw new HttpResponseException(\$this->validateError(\$validator->errors()));
+                    if (\$this->wantsJson() || \$this->ajax()) {
+                        throw new HttpResponseException(\$this->validateError(\$validator->errors()));
+                    }
+                    parent::failedValidation(\$validator);
+                }
+
+                /**
+                 * Get the validation rules that apply to the request.
+                 *
+                 * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
+                 */
+                public function rules(): array
+                {
+                    return [
+                        'action' => 'required|sometimes|in:active,inactive,delete',
+                        'ids' => [
+                            'array',
+                            function (\$attribute, \$value, \$fail) {
+                                if (empty(\$value)) {
+                                    \$fail('The ' . \$attribute . ' must contain at least one item.');
+                                }
+                            },
+                        ],
+                    ];
+                }
+            }
+            EOD;
+
+        return $content;
+    }
+}
+if (!function_exists('GetAllValidation')) {
+    function GetAllValidation($moduleName, $fields)
+    {
+
+
+        $formated_module = explode('/', $moduleName);
+
+        if (count($formated_module) > 1) {
+
+            $moduleName = implode('/', $formated_module);
+            $moduleName = Str::replace("/", "\\", $moduleName);
+        } else {
+            $moduleName = Str::replace("/", "\\", $moduleName);
+        }
+
+
+
+        $content = <<<"EOD"
+            <?php
+
+            namespace App\\Modules\\{$moduleName}\\Validations;
+
+            use Illuminate\Contracts\Validation\Validator;
+            use Illuminate\Foundation\Http\FormRequest;
+            use Illuminate\Http\Exceptions\HttpResponseException;
+            use Illuminate\Validation\Rule;
+
+            class GetAllValidation extends FormRequest
+            {
+                /**
+                 * Determine if the  is authorized to make this request.
+                 */
+                public function authorize(): bool
+                {
+                    return true;
+                }
+                /**
+                 * validateError to make this request.
+                 */
+                public function validateError(\$data)
+                {
+                    \$errorPayload =  \$data->getMessages();
+                    return response(['status' => 'validation_error', 'errors' => \$errorPayload], 422);
+                }
+
+                protected function failedValidation(Validator \$validator)
+                {
+                    throw new HttpResponseException(\$this->validateError(\$validator->errors()));
+                    if (\$this->wantsJson() || \$this->ajax()) {
+                        throw new HttpResponseException(\$this->validateError(\$validator->errors()));
+                    }
+                    parent::failedValidation(\$validator);
+                }
+
+                /**
+                 * Get the validation rules that apply to the request.
+                 *
+                 * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array|string>
+                 */
+                public function rules(): array
+                {
+                    return [
+                        'limit' => 'required|sometimes',
+                        'page' => 'required|sometimes',
+                        'fields' => 'required|sometimes',
+                        'sort_by_col' => 'required|sometimes',
+                        'sort_type' => 'required|sometimes',
+                        'status' => 'required|sometimes',
+
                     ];
                 }
             }
@@ -513,7 +824,13 @@ if (!function_exists('model')) {
                     static::created(function (\$data) {
                         \$random_no = random_int(100, 999) . \$data->id . random_int(100, 999);
                         \$slug = \$data->title . " " . \$random_no;
-                        \$data->slug = Str::slug(\$slug);
+                        \$data->slug = Str::slug(\$slug); //use Illuminate\Support\Str;
+                        if (strlen(\$data->slug) > 150) {
+                            \$data->slug = substr(\$data->slug, strlen(\$data->slug) - 150, strlen(\$data->slug));
+                        }
+                        if (auth()->check()) {
+                            \$data->creator = auth()->user()->id;
+                        }
                         \$data->save();
                     });
                 }
@@ -573,31 +890,65 @@ if (!function_exists('migration')) {
         EOD;
         if (count($fields)) {
             foreach ($fields as $fieldName) {
+                $stringLimit = 100;
 
                 if (count($fieldName) == 1) {
-                    $content .= "            \$table->string('{$fieldName[0]}')->nullable();\n";
+                    $content .= "            \$table->string('{$fieldName[0]}, {$stringLimit}')}')->nullable();\n";
                 }
                 if (count($fieldName) > 1) {
                     $type = $fieldName[1];
-                    if ($type == 'text') {
-                        $type =  'string';
-                    } elseif ($type == 'longtext') {
-                        $type =  'text';
-                    } elseif ($type == 'number' || $type == 'integer') {
-                        $type = 'bigInteger';
-                    } elseif ($type == 'boolean' || $type == 'tinyint') {
-                        $type =  'tinyInteger';
-                    } elseif ($type == 'date') {
-                        $type =  'date';
-                    } elseif ($type == 'enum') {
-                        $type =  'enum';
-                    } elseif ($type == 'float') {
-                        $type =  'float';
-                    } else {
-                        $type =  'string';
+                    //enum value set
+                    $enumvalue = [];
+
+                    $position = strpos($type, '-');
+
+                    if ($position == 4) {
+                        $enumType = explode('-', $type);
+                        $type = $enumType[0];
+                        $enumvalue = explode('.', $enumType[1]);
                     }
 
-                    $content .= $type == 'enum' ? "            \$table->{$type}('{$fieldName[0]}',['value1','value2'])->nullable();\n" : "            \$table->{$type}('{$fieldName[0]}')->nullable();\n";
+                    if ($position == 6) {
+                        $limit = explode('-', $type);
+                        $limit = explode('.', $limit[1]);
+                        $stringLimit = $limit[0];
+                    }
+
+                    //enum value set end
+                    if ($type == 'string') {
+                        $type = 'string';
+                    } elseif (in_array($type, ['longtext', 'text'])) {
+                        $type = 'text';
+                    } elseif (in_array($type, ['number', 'integer', 'intiger', 'int'])) {
+                        $type = 'integer';
+                    } elseif (in_array($type, ['bigint', 'biginteger'])) {
+                        $type = 'bigInteger';
+                    } elseif (in_array($type, ['boolean', 'tinyint'])) {
+                        $type = 'tinyInteger';
+                    } elseif ($type == 'date') {
+                        $type = 'date';
+                    } elseif ($type == 'datetime') {
+                        $type = 'datetime';
+                    } elseif ($type == 'json') {
+                        $type = 'json';
+                    } elseif ($type == 'enum') {
+                        $type = 'enum';
+                    } elseif ($type == 'float') {
+                        $type = 'float';
+                    } else {
+                        $type = 'string';
+                    }
+
+                    if ($type == 'enum') {
+                        $enumString = implode("','", $enumvalue);
+                        $content .= "            \$table->{$type}('{$fieldName[0]}', ['{$enumString}'])->nullable();\n";
+                    } else if ($type == 'string') {
+                        $content .= "            \$table->string('{$fieldName[0]}', {$stringLimit})->nullable();\n";
+                    } else if ($type == 'tinyInteger') {
+                        $content .= "            \$table->tinyInteger('{$fieldName[0]}')->default(0);\n";
+                    } else {
+                        $content .= "            \$table->{$type}('{$fieldName[0]}')->nullable();\n";
+                    }
                 }
             }
         }
@@ -709,10 +1060,15 @@ if (!function_exists('controller')) {
         namespace App\\Modules\\{$moduleName};
 
         use App\\Modules\\{$moduleName}\\Actions\All;
-        use App\\Modules\\{$moduleName}\\Actions\Delete;
+        use App\\Modules\\{$moduleName}\\Actions\Destroy;
         use App\\Modules\\{$moduleName}\\Actions\Show;
         use App\\Modules\\{$moduleName}\\Actions\Store;
         use App\\Modules\\{$moduleName}\\Actions\Update;
+        use App\\Modules\\{$moduleName}\\Actions\SoftDelete;
+        use App\\Modules\\{$moduleName}\\Actions\Restore;
+        use App\\Modules\\{$moduleName}\\Actions\Import;
+        use App\\Modules\\{$moduleName}\\Validations\\BulkActionsValidation;
+        use App\\Modules\\{$moduleName}\\Validations\\GetAllValidation;
         use App\\Modules\\{$moduleName}\\Validations\\Validation;
         use App\\Modules\\{$moduleName}\\Actions\BulkActions;
         use App\Http\Controllers\Controller as ControllersController;
@@ -721,9 +1077,9 @@ if (!function_exists('controller')) {
         class Controller extends ControllersController
         {
 
-            public function index()
+            public function index(GetAllValidation \$request)
             {
-                \$data = All::execute();
+                \$data = All::execute(\$request);
                 return \$data;
             }
 
@@ -733,26 +1089,41 @@ if (!function_exists('controller')) {
                 return \$data;
             }
 
-            public function show(\$id)
+            public function show(\$slug)
             {
-                \$data = Show::execute(\$id);
+                \$data = Show::execute(\$slug);
                 return \$data;
             }
 
-            public function update(Validation \$request, \$id)
+            public function update(Validation \$request, \$slug)
             {
-                \$data = Update::execute(\$request, \$id);
+                \$data = Update::execute(\$request, \$slug);
                 return \$data;
             }
 
-            public function destroy(\$id)
+            public function softDelete()
             {
-                \$data = Delete::execute(\$id);
+                \$data = SoftDelete::execute();
                 return \$data;
             }
-            public function bulkAction()
+            public function destroy(\$slug)
             {
-                \$data = BulkActions::execute();
+                \$data = Destroy::execute(\$slug);
+                return \$data;
+            }
+            public function restore()
+            {
+                \$data = Restore::execute();
+                return \$data;
+            }
+            public function import()
+            {
+                \$data = Import::execute();
+                return \$data;
+            }
+            public function bulkAction(BulkActionsValidation \$request)
+            {
+                \$data = BulkActions::execute(\$request);
                 return \$data;
             }
 
@@ -785,13 +1156,20 @@ if (!function_exists('routeContent')) {
             use Illuminate\Support\Facades\Route;
 
             Route::prefix('v1')->group(function () {
-                Route::apiResource('{$route_name}', Controller::class);
-                Route::post('{$route_name}/bulk-action', [Controller::class, 'bulkAction']);
+                Route::prefix('{$route_name}')->group(function () {
+                    Route::get('', [Controller::class,'index']);
+                    Route::get('{slug}', [Controller::class,'show']);
+                    Route::post('store', [Controller::class,'store']);
+                    Route::post('update/{slug}', [Controller::class,'update']);
+                    Route::post('soft-delete', [Controller::class,'softDelete']);
+                    Route::delete('destroy/{slug}', [Controller::class,'destroy']);
+                    Route::post('restore', [Controller::class,'restore']);
+                    Route::post('import', [Controller::class,'import']);
+                    Route::post('bulk-action', [Controller::class, 'bulkAction']);
+                });
             });
             EOD;
-        // $content = str_replace('{moduleName}', $moduleName, $content);
 
-        // $content = str_replace('{route_name}', $route, $content);
         return $content;
     }
 }

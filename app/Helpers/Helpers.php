@@ -1,6 +1,7 @@
 <?php
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Illuminate\support\Str;
@@ -20,12 +21,46 @@ if (!function_exists('entityResponse')) {
 }
 
 if (!function_exists('messageResponse')) {
-    function messageResponse($message = '', $statusCode = 200, $status = 'success')
+    function messageResponse($message = '', $data = [], $statusCode = 200, $status = 'success')
     {
-        return response(['status' => $status, 'statusCode' => $statusCode, 'message' => $message], $statusCode);
+        return response(['status' => $status, 'statusCode' => $statusCode, 'message' => $message, 'data' => $data], $statusCode);
     }
 }
 
+if (!function_exists('additionalValidation')) {
+    function additionalValidation($data)
+    {
+        $errorPayload = [];
+        if ($data && count($data) > 0) {
+            foreach ($data as $key => $value) {
+                $errorPayload[$value] = [
+                    $value . ' is required'
+                ];
+            }
+        }
+        return response()->json([
+            'status' => 'validation_error',
+            'errors' => $errorPayload
+        ], 422);
+    }
+}
+
+
+if (!function_exists('sendToTelegram')) {
+    function sendToTelegram($chatId = '6555657006', $text = 'this is test message')
+    {
+        $bot_token = env('BOT_TOKEN');
+        $method = "sendMessage";
+        $parameters = [
+            // 'chat_id' => 812239513,//shifat
+            'chat_id' => $chatId,
+            'text' => $text,
+        ];
+        $url = "https://api.telegram.org/bot$bot_token/$method";
+        $response = Http::get($url . '?chat_id=' . $parameters['chat_id'] . '&text=' . $parameters['text']);
+        return $response->json();
+    }
+}
 
 if (!function_exists('uploader')) {
     function uploader($source, $path, $width = null, $height = null, $file_name = null)
@@ -38,6 +73,7 @@ if (!function_exists('uploader')) {
             $path = Storage::putFile($path, $source);
             return $path;
         }
+
 
         $image = Image::make($source);
 
@@ -53,7 +89,7 @@ if (!function_exists('uploader')) {
         }
         if (!$file_name) {
             $file_name = Carbon::now()->toDateTimeString();
-            $file_name = Str::slug($file_name);
+            $file_name = Str::slug($file_name) . rand(999, 99999);
             $file_name .= "." . $source->getClientOriginalExtension();
         } else {
             $file_name = Str::slug($file_name);
@@ -70,8 +106,109 @@ if (!function_exists('uploader')) {
     }
 }
 
+
+
+
+
+function numercToAlphabet($number)
+{
+
+    //A function to convert numbers into Indian readable words with Cores, Lakhs and Thousands.
+    $words = array(
+        '0' => '', '1' => 'one', '2' => 'two', '3' => 'three', '4' => 'four', '5' => 'five',
+        '6' => 'six', '7' => 'seven', '8' => 'eight', '9' => 'nine', '10' => 'ten',
+        '11' => 'eleven', '12' => 'twelve', '13' => 'thirteen', '14' => 'fouteen', '15' => 'fifteen',
+        '16' => 'sixteen', '17' => 'seventeen', '18' => 'eighteen', '19' => 'nineteen', '20' => 'twenty',
+        '30' => 'thirty', '40' => 'fourty', '50' => 'fifty', '60' => 'sixty', '70' => 'seventy',
+        '80' => 'eighty', '90' => 'ninty'
+    );
+
+    //First find the length of the number
+    $number_length = strlen($number);
+    //Initialize an empty array
+    $number_array = array(0, 0, 0, 0, 0, 0, 0, 0, 0);
+    $received_number_array = array();
+
+    //Store all received numbers into an array
+    for ($i = 0; $i < $number_length; $i++) {
+        $received_number_array[$i] = substr($number, $i, 1);
+    }
+
+    //Populate the empty array with the numbers received - most critical operation
+    for ($i = 9 - $number_length, $j = 0; $i < 9; $i++, $j++) {
+        $number_array[$i] = $received_number_array[$j];
+    }
+
+    $number_to_words_string = "";
+    //Finding out whether it is teen ? and then multiply by 10, example 17 is seventeen, so if 1 is preceeded with 7 multiply 1 by 10 and add 7 to it.
+    for ($i = 0, $j = 1; $i < 9; $i++, $j++) {
+        //"01,23,45,6,78"
+        //"00,10,06,7,42"
+        //"00,01,90,0,00"
+        if ($i == 0 || $i == 2 || $i == 4 || $i == 7) {
+            if ($number_array[$j] == 0 || $number_array[$i] == "1") {
+                $number_array[$j] = intval($number_array[$i]) * 10 + $number_array[$j];
+                $number_array[$i] = 0;
+            }
+        }
+    }
+
+    $value = "";
+    for ($i = 0; $i < 9; $i++) {
+        if ($i == 0 || $i == 2 || $i == 4 || $i == 7) {
+            $value = $number_array[$i] * 10;
+        } else {
+            $value = $number_array[$i];
+        }
+        if ($value != 0) {
+            $number_to_words_string .= $words["$value"] . " ";
+        }
+        if ($i == 1 && $value != 0) {
+            $number_to_words_string .= "Crores ";
+        }
+        if ($i == 3 && $value != 0) {
+            $number_to_words_string .= "Lakhs ";
+        }
+        if ($i == 5 && $value != 0) {
+            $number_to_words_string .= "Thousand ";
+        }
+        if ($i == 6 && $value != 0) {
+            $number_to_words_string .= "Hundred ";
+        }
+    }
+    if ($number_length > 9) {
+        $number_to_words_string = "Sorry This does not support more than 99 Crores";
+    }
+    return ucwords(strtolower($number_to_words_string));
+}
+
 function facker()
 {
 
     return   Faker::create();
 }
+
+/**
+ * ```js
+  logEntry([
+        "user_id" => $data['user_id'],
+        "user_type" => $data['user_type'],
+        "date" => $data['date'],
+        "name" => $data['name'],
+        "amount" => $data['amount'],
+        "category_id" => $data['category_id'],
+        "account_id" => $data['account_id'],
+        "account_number_id" => $data['account_number_id'],
+        "trx_id" => $data['trx_id'],
+        "receipt_no" => $data['receipt_no'],
+        "is_income" => $data['is_income'],
+        "is_expense" => $data['is_expense'],
+        "description" => $data['description'],
+        "random_user" => $data['random_user'],
+    ])
+ */
+
+
+// dd(__DIR__);
+include_once(__DIR__ . '\Stock.php');
+include_once(__DIR__ . '\Product.php');

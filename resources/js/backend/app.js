@@ -23,14 +23,7 @@ const router = createRouter({
     linkActiveClass: 'active',
     linkExactActiveClass: 'active',
     routes: [
-        {
-            path: "/",
-            name: "home",
-            component: App,
-            children: [
-                admin_routes,
-            ]
-        },
+        admin_routes,
     ]
 })
 // previous route store

@@ -1,11 +1,10 @@
 <template>
     <div id="wrapper">
         <top-header></top-header>
+        <side-bar></side-bar>
         <div class="clearfix"></div>
         <div class="content-wrapper">
-            <div class="container-fluid">
-                <router-view></router-view>
-            </div>
+            <router-view></router-view>
         </div>
         <!--End content-wrapper-->
 
@@ -49,8 +48,9 @@
 
 <script>
 import TopHeader from "./pages/admin/partials/TopHeader.vue";
+import SideBar from "./pages/admin/partials/SideBar.vue";
 export default {
-    components: { TopHeader },
+    components: { TopHeader, SideBar },
     created: function () {
         let prev_url = window.sessionStorage.getItem("prevurl");
         let token = localStorage.getItem("token");

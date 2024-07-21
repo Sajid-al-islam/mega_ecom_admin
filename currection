@@ -1,0 +1,9 @@
+1. all data api te by default query parameter gulo validation kora
+2. sob all api te ofset, limit egula common paginate hobe
+3. all api te select_fields coumn nai
+4. query params validation with exists condition
+5. filter filter_criteria bad gece
+6. search hobe search_key
+7. all data er sathe active data count and deactive data count send korte hobe
+
+

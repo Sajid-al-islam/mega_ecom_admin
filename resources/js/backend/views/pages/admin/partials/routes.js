@@ -1,11 +1,8 @@
 import Layout from "./Layout.vue"
 import Dashboard from "../Dashboard.vue"
 
-//blog management routes
-// import blog_category_routes from "../management/BlogManagement/Category/setup/routes";
-// import blog_routes from "../management/BlogManagement/Blog/setup/routes";
 //user management routes
-import user_routes from "../management/UserManagement/User/setup/routes";
+import user_routes from "../management/UserManagement/users/setup/routes";
 
 import product_brand_routes from "../management/ProductManagement/Brand/setup/routes"
 import product_manufacture_routes from "../management/ProductManagement/Manufacture/setup/routes"

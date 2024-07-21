@@ -45,7 +45,7 @@ class Validation extends FormRequest
             'image' => 'sometimes',
             'blog_type' => 'sometimes',
             'url' => 'sometimes',
-            'privecy_status' => ['sometimes', Rule::in(['public', 'private'])],
+            'privecy_status' => 'sometimes',
             'status' => ['sometimes', Rule::in(['active', 'inactive'])],
         ];
     }

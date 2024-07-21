@@ -14,17 +14,24 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->string('email')->nullable();
-            $table->string('phone')->nullable();
-            $table->bigInteger('age')->nullable();
-            $table->string('image')->nullable();
-            $table->string('password')->nullable();
+            $table->string('name', 50)->nullable();
+            $table->string('user_name', 50)->nullable();
+            $table->tinyInteger('role_serial')->default(3);
+            $table->string('email', 50)->nullable();
+            $table->string('phone_number', 20)->nullable();
+            $table->string('photo',100)->default('avatar.png');
+            $table->string('password', 100)->nullable();
+            $table->bigInteger('role_id')->default(3);
+            $table->tinyInteger('is_blocked')->default(0);
+            $table->integer('no_of_attempt')->default(0);
+            $table->timestamp('email_verified_at')->nullable();
+            $table->rememberToken();
 
             $table->bigInteger('creator')->unsigned()->nullable();
-            $table->string('slug', 50)->nullable();
-            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->string('slug',50)->nullable();
+            $table->enum('status',['active','inactive'])->default('active');
             $table->timestamps();
+            // $table->softDeletes();
         });
     }
 

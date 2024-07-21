@@ -7,110 +7,209 @@ if (!function_exists('viewAll')) {
     {
 
         $moduleName = Str::singular((Str::snake($moduleName)));
-
         $content = <<<"EOD"
                     <template>
-                    <div class="container-fluid">
-                        <!-- Container-fluid starts -->
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="card">
-                                    <div class="card-header d-flex justify-content-between">
-                                        <h5 class="text-capitalize"> {{ page_title }}</h5>
-                                        <div v-if="child_items.length" class="btn-group m-1 "
-                                            onclick="document.getElementById('table-actions').classList.toggle('show')">
-                                            <button type="button" class="btn btn-light waves-effect waves-light">Actions</button>
-                                            <button type="button"
-                                                class="btn btn-light split-btn-light dropdown-toggle dropdown-toggle-split waves-effect waves-light"
-                                                data-toggle="dropdown" aria-expanded="false">
-                                                <span class="caret"></span>
-                                            </button>
-                                            <div class="dropdown-menu" style="" id="table-actions">
-                                                <a href="javaScript:void();" class="dropdown-item" @click="bulkActions('delete')">Delete</a>
-                                                <a href="javaScript:void();" class="dropdown-item" @click="bulkActions('active')">Active</a>
-                                                <a href="javaScript:void();" class="dropdown-item"
-                                                    @click="bulkActions('inactive')">Inactive</a>
+                    <div class="page-body">
+                    <div class="pt-2">
+                        <div class="page-header my-2">
+                            <div class="row align-items-center rounded-2 justify-content-between">
+                                <div class="col-lg-4">
+                                    <h5 class="m-0 text-capitalize">
+                                    {{ page_title }}
+                                    </h5>
+                                </div>
+                                <div v-if="child_items.length" class="btn-group m-1 col-lg-4"
+                                     onclick="document.getElementById('table-actions').classList.toggle('show')">
+                                    <button type="button" class="btn btn-light waves-effect waves-light">Actions</button>
+                                    <button type="button"
+                                        class="btn btn-light split-btn-light dropdown-toggle dropdown-toggle-split waves-effect waves-light"
+                                        data-toggle="dropdown" aria-expanded="false">
+                                        <span class="caret"></span>
+                                    </button>
+                                    <div class="dropdown-menu" style="" id="table-actions">
+                                        <a href="javaScript:void();" class="dropdown-item" @click="bulkActions('delete')">Delete</a>
+                                        <a href="javaScript:void();" class="dropdown-item" @click="bulkActions('active')">Active</a>
+                                        <a href="javaScript:void();" class="dropdown-item"
+                                            @click="bulkActions('inactive')">Inactive</a>
 
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <router-link class="btn btn-outline-warning btn-sm"
-                                                :to="{ name: `Create\${route_prefix}` }">Create</router-link>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 text-end">
+                                    <span>
+                                        <router-link :to="{ name: `Create\${route_prefix}` }" class="btn rounded-pill btn-outline-info">
+                                            <i class="fa fa-pencil me-5px"></i>
+                                            Create
+                                        </router-link>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="conatiner">
+                            <div class="card list_card">
+                                <div class="card-header align-items-center">
+                                    <div class="search">
+                                        <form action="#">
+                                            <input v-model.debounce:1000ms="search_data" placeholder="search..." type="search"
+                                                class="form-control border border-info" />
+                                        </form>
+                                    </div>
+                                    <div class="btns d-flex gap-2 align-items-center">
+                                        <div class="table_actions">
+                                            <a @click.prevent="" href="#" class="btn px-3 btn-outline-secondary"><i
+                                                    class="fa fa-list"></i></a>
+                                            <ul>
+                                                <li>
+                                                    <a @click.prevent="ExportData(all_data.data)">
+                                                        <i class="fa-regular fa-hand-point-right"></i>
+                                                        Export All
+                                                    </a>
+                                                </li>
+
+                                                <li>
+                                                    <a href="#/user/import" class="">
+                                                        <i class="fa-regular fa-hand-point-right"></i>
+                                                        Import
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" title="display data that has been deactivated" class="d-flex">
+                                                        <i class="fa-regular fa-hand-point-right"></i>
+                                                        Deactivated data
+                                                    </a>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </div>
-                                    <div class="card-body table-responsive h-80vh">
-                                        <table class="table table-hover text-center table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th class="w-10"><input type="checkbox" v-model="parent_item"
-                                                    @click="toggleParentCheckbox"></th>
-                                                    <th class="text-start">SL</th>
-                EOD;
-        if (count($fields)) {
-            foreach ($fields as $fieldName) {
-                $label = Str::of($fieldName[0])->snake()->replace('_', ' ');
-                $content .=  "<th>  $label </th> \n";
-            }
-        }
-        $content .= <<<"EOD"
-                                                    <th>status</th>
-                                                    <th class="text-end">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody v-if="all_data.data?.length">
-                                                <tr v-for="(item, index) in all_data.data" :key="item.id">
-                                                    <td class="w-10">
-                                                       <input @click="toggleChildCheckbox(item.id)"
-                                                      :checked="child_items.includes(item.id)" type="checkbox">
-                                                    </td>
-                                                    <td class="text-start">{{ index + 1 }}</td>
+                                </div>
+                                <div class="table-responsive card-body text-nowrap">
+                                    <table class="table table-hover table-bordered">
+                                        <thead class="table-light">
+                                            <tr class="t-head">
+                                                <!-- <th>
+                                                    <input type="checkbox" class="form-check-input" />
+                                                </th> -->
+                                                <th aria-label="id" class="cursor_n_resize">
+                                                    ID
+
+                                                </th>
             EOD;
         if (count($fields)) {
             foreach ($fields as $fieldName) {
-                $content .=  "<th> {{ item.$fieldName[0]}} </th> \n";
+                $label = Str::of($fieldName[0])->snake()->replace('_', ' ');
+                $content .=  "<th class='cursor_n_resize'>   $label </th> \n";
             }
         }
         $content .= <<<"EOD"
-                                                    <td>{{ item.status }}</td>
-                                                    <td style="width: 100px;">
-                                                        <div class="d-flex justify-content-between gap-2">
-                                                            <!-- <router-link class="btn btn-sm btn-outline-success "
-                                                                :to="{ name: `Create\${route_prefix}` }">
-                                                                <i class="fa fa-eye"></i>
-                                                            </router-link> -->
-                                                            <router-link class="btn btn-sm btn-outline-warning mx-2" :to="{
-                                                                name: `Create\${route_prefix}`, query: {
-                                                                    id: item.id,
-                                                                },
-                                                            }">
-                                                                <i class="fa fa-pencil"></i>
-                                                            </router-link>
-                                                            <a @click.prevent="delete_data(item.id)" class="btn btn-sm btn-outline-danger ">
-                                                                <i class="fa fa-trash"></i>
-                                                            </a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                            <tbody v-else>
-                                            <tr>
-                                                <td colspan="8" class="">
-                                                    No Data found
+                                                 <th class="cursor_n_resize">
+                                                status
+
+                                                </th>
+                                                <th aria-label="actions">Actions</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody class="table-border-bottom-0" v-if="loaded">
+                                            <tr v-for="(item, index) in all_data.data" :key="index">
+                                                <!-- <td>
+                                                    <input type="checkbox" class="form-check-input" />
+                                                </td> -->
+                                                <td>{{ item.id }}</td>
+            EOD;
+        if (count($fields)) {
+            foreach ($fields as $fieldName) {
+
+                $content .=  "<th class='cursor_n_resize'> {{ item.$fieldName[0]}} </th> \n";
+            }
+        }
+        $content .= <<<"EOD"
+                                                <td>
+                                                    {{ item.status }}
+                                                </td>
+                                                <td>
+                                                    <div class="table_actions">
+                                                        <a @click.prevent="" href="#" class="btn btn-sm btn-outline-secondary"><i
+                                                                class="fa fa-gears"></i></a>
+                                                        <ul>
+                                                            <!-- <li>
+                                                                <a href="">
+                                                                    <i
+                                                                        class="fa text-info fa-eye"
+                                                                    ></i>
+                                                                    Quick View
+                                                                </a>
+                                                            </li> -->
+                                                            <!-- <li>
+                                                                <span>
+                                                                    <a
+                                                                        href="#/user/details/43"
+                                                                        class=""
+                                                                    >
+                                                                        <i
+                                                                            class="fa text-secondary fa-eye"
+                                                                        ></i>
+                                                                        Details
+                                                                    </a>
+
+                                                                </span>
+                                                            </li> -->
+                                                            <li>
+                                                                <span>
+                                                                    <router-link :to="{
+                                                                        name: `Create\${route_prefix}`,
+                                                                        query: {
+                                                                            id: item.id,
+                                                                        },
+                                                                    }" class="">
+                                                                        <i class="fa text-warning fa-pencil"></i>
+                                                                        Edit
+                                                                    </router-link>
+
+                                                                </span>
+                                                            </li>
+                                                            <li>
+                                                                <span>
+                                                                    <a @click.prevent="
+                                                                        delete_data(
+                                                                            item.id
+                                                                        )
+                                                                        " href="#" class="">
+                                                                        <i class="fa text-danger fa-trash"></i>
+                                                                        Delete
+                                                                    </a>
+                                                                </span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         </tbody>
-                                        </table>
-                                        <hr>
-
-                                    </div>
-                                    <div class="mx-5">
-                                        <pagination :data="all_data" :method="get_all_data" />
+                                    </table>
+                                </div>
+                                <div class="card-footer py-1 border-top-0 d-flex justify-content-between border border-1">
+                                    <pagination :data="all_data" :method="get_all_data" />
+                                    <div class="float-right">
+                                        <div class="show-limit d-inline-block">
+                                            <span>Limit:</span>
+                                            <select class="" v-model="offset">
+                                                <option value="5">5</option>
+                                                <option value="10">10</option>
+                                                <option value="25">25</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                            </select>
+                                        </div>
+                                        <div class="show-limit d-inline-block">
+                                            <span>Total:</span>
+                                            <span>{{ all_data.total }}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!-- Container-fluid starts -->
                     </div>
+                </div>
+
+
                     </template>
 
                     <script>
@@ -122,12 +221,16 @@ if (!function_exists('viewAll')) {
                             route_prefix: '',
                             page_title: '',
                             parent_item: false,
+                            offset:5,
+                            loaded:false,
+                            search_data:'',
                             child_items: []
                         }),
-                        created: function () {
+                        created: async function () {
                             this.route_prefix = setup.route_prefix;
                             this.page_title = setup.page_title;
-                            this.get_all_data()
+                            await this.get_all_data()
+                            this.loaded = true
                         },
                         methods: {
                             ...mapActions({$moduleName}_setup_store, {
@@ -179,33 +282,58 @@ if (!function_exists('viewForm')) {
         $moduleName = Str::singular((Str::snake($moduleName)));
         $content = <<<"EOD"
                     <template>
-                    <div>
-                        <form @submit.prevent="submitHandler">
-                            <div class="card">
-                                <div class="card-header d-flex justify-content-between">
-                                    <h5 class="text-capitalize">{{ param_id ? 'Update' : 'Create' }} new {{ route_prefix }}</h5>
-                                    <div>
-                                        <router-link class="btn btn-outline-warning btn-sm" :to="{ name: `All\${route_prefix}` }">All {{
-                                            route_prefix }}</router-link>
+
+                    <div class="page-body">
+                    <div class="py-2">
+                        <div class="container-fluid">
+                            <div class="page-header">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <h6>
+                                            {{ param_id ? 'Update' : 'Create' }} new <span class="text-lowercase">
+                                            {{ route_prefix}}</span>
+                                        </h6>
                                     </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-12" v-for="(form_field, index) in form_fields" :key="index">
-                                            <common-input :label="form_field.label" :type="form_field.type" :name="form_field.name"
-                                                :multiple="form_field.multiple" :value="form_field.value"
-                                                :data_list="form_field.data_list" />
+                                    <div class="col-lg-6 text-end">
+                                        <div class="btns">
+                                            <router-link :to="{ name: `All\${route_prefix}` }"
+                                                class="btn rounded-pill btn-outline-warning router-link-active"><i
+                                                    class="fa fa-arrow-left me-5px"></i>
+                                                Back
+                                            </router-link>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-light btn-square px-5"><i class="icon-lock"></i>
-                                            Submit</button>
                                     </div>
                                 </div>
                             </div>
+                            <div class="my-1">
+                        <form @submit.prevent="submitHandler" class="user_create_form card">
+                            <div class="card-body">
+                                <div class="row justify-content-center">
+                                    <div class="col-lg-12">
+                                        <div class="admin_form form_1">
+                                            <template v-for="(
+                                                    form_field, index
+                                                ) in form_fields" :key="index">
+                                                <common-input :label="form_field.label" :onchange="getRespose"
+                                                    :type="form_field.type" :name="form_field.name"
+                                                    :multiple="form_field.multiple" :value="form_field.value" :data_list="form_field.data_list
+                                                        " />
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer text-center">
+                                <button type="submit" class="btn btn-outline-info">
+                                    <i class="fa fa-upload"></i>
+                                    Submit
+                                </button>
+                            </div>
 
                         </form>
-
+                        </div>
+                        </div>
+                    </div>
                     </div>
                 </template>
 
@@ -361,15 +489,14 @@ if (!function_exists('ViewFormField')) {
 }
 
 if (!function_exists('ViewIndex')) {
-    function ViewIndex($moduleName, $role)
+    function ViewIndex($moduleName)
     {
         $prefix = Str::singular((ucfirst($moduleName)));
-
+        $title =  preg_replace('/([a-z])([A-Z])/', '$1 $2', $prefix);
         $content = <<<"EOD"
         let setup = {
-            page_title: `{$prefix} Management`,
+            page_title: `{$title} Management`,
             route_prefix: `{$prefix}`,
-            role_prefix:`{$role}`
         }
         export default setup;
         EOD;
@@ -460,7 +587,7 @@ if (!function_exists('ViewStore')) {
                 all_data: {},
                 single_data: {},
                 role_data: {},
-                api:"{$apiName}/"
+                api:"{$apiName}"
             }),
             getters: {
                 doubleCount: (state) => state.count * 2,
@@ -478,7 +605,7 @@ if (!function_exists('ViewStore')) {
                 },
 
                 get: async function (id) {
-                    let response = await axios.get(this.api+id);
+                    let response = await axios.get(`\${this.api}/\${id}`);
                     response = response.data.data;
                     this.single_data = response;
                 },
@@ -491,21 +618,21 @@ if (!function_exists('ViewStore')) {
 
                 update: async function (form, id) {
                     let formData = new FormData(form);
-                    let response = await axios.post(`\${this.api}\${id}?_method=PATCH`, formData);
+                    let response = await axios.post(`\${this.api}/\${id}?_method=PATCH`, formData);
                     return response;
                 },
 
                 delete: async function (id) {
                     var data = await window.s_confirm();
                     if (data) {
-                        let response = await axios.delete(this.api+id);
+                        let response = await axios.delete(`\${this.api}/\${id}`);
                         window.s_alert("Data deleted");
                         this.all();
                         console.log(response.data);
                     }
                 },
                 bulk_action: async function (action, data) {
-                    let response = await axios.post(`\${this.api}bulk-action`, { action, data })
+                    let response = await axios.post(`\${this.api}/bulk-action`, { action, data })
                     if (response.data.status === "success") {
                         window.s_alert(response.data.message);
                         this.all();

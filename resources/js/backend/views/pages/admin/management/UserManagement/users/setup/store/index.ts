@@ -1,14 +1,19 @@
-import axios from "axios";
 import { defineStore } from "pinia";
-import { anyObject } from "../../../../../../../../common_types/object";
 import { initialState } from "./initia_state";
 
+/** async actions */
 import all from "./async_actions/all";
+import create from "./async_actions/create";
+import details from "./async_actions/details";
+import update from "./async_actions/update";
+
+/** actions */
 import set_page from "./actions/set_page";
 import set_paginate from "./actions/set_paginate";
-
-let s_alert = (window as anyObject).s_alert;
-let s_confirm = (window as anyObject).s_confirm;
+import set_show_details_canvas from "./actions/set_show_details_canvas";
+import set_show_filter_canvas from "./actions/set_show_filter_canvas";
+import set_item from "./actions/set_item";
+import set_filter_criteria from "./actions/set_filter_criteria";
 
 export const store = defineStore("users_store", {
     state: () => initialState,
@@ -16,49 +21,16 @@ export const store = defineStore("users_store", {
     actions: {
         /* async actions */
         get_all: all,
+        create: create,
+        update: update,
+        details: details,
 
         /* actions */
         set_page,
         set_paginate,
-
-        get: async function (id) {
-            let response = await axios.get(this.api+id);
-            response = response.data.data;
-            this.single_data = response;
-        },
-
-        store: async function (form) {
-            let formData = new FormData(form);
-            let response = await axios.post(this.api, formData);
-            return response;
-        },
-
-        update: async function (form, id) {
-            let formData = new FormData(form);
-            let response = await axios.post(`${this.api}${id}?_method=PATCH`, formData);
-            return response;
-        },
-
-        delete: async function (id) {
-            var data = await s_confirm();
-            if (data) {
-                let response = await axios.delete(this.api+id);
-                s_alert("Data deleted");
-                this.all();
-                console.log(response.data);
-            }
-        },
-        bulk_action: async function (action, data) {
-            let response = await axios.post(`${this.api}bulk-action`, { action, data })
-            if (response.data.status === "success") {
-                s_alert(response.data.message);
-                this.all();
-            }
-        },
-
-        // additional function
-        // additional function
-
-
+        set_show_details_canvas,
+        set_item,
+        set_show_filter_canvas,
+        set_filter_criteria,
     },
 });

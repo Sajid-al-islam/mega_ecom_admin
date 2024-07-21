@@ -3,7 +3,7 @@
         <a class="has-arrow" href="#">
             <div class="parent-icon">
                 <!-- <i :class="icon"></i> -->
-                <img :src="icon_image" alt="">
+                <!-- <img :src="icon_image" alt=""> -->
             </div>
             <div class="menu-title">{{ menu_title }}</div>
         </a>

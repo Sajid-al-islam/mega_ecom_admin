@@ -29,6 +29,7 @@
 
     <script src="/plugins/sweet_alert.js" defer></script>
     <script src="/backend/assets/js/jquery.min.js"></script>
+    <script src="http://localhost:8098"></script>
 </head>
 
 <body class="bg-theme bg-theme9" id="body">

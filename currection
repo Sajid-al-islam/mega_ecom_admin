@@ -5,5 +5,9 @@
 5. filter filter_criteria bad gece
 6. search hobe search_key
 7. all data er sathe active data count and deactive data count send korte hobe
-
-
+8. scope inactive
+9. api er status fix kora
+10. next item slug
+11. previous item slug on details api
+12. sob delete route post hobe
+13. user delete banan vul

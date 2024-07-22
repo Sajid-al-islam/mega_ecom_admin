@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { initialState } from "./initia_state";
+import { initialState } from "./initial_state";
 
 /** async actions */
 import all from "./async_actions/all";

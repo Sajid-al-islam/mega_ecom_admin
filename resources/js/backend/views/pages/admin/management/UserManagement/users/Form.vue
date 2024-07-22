@@ -5,7 +5,7 @@
                 <div class="card-header d-flex justify-content-between">
                     <h5 class="text-capitalize">{{ param_id ? 'Update' : 'Create' }} new {{ route_prefix }}</h5>
                     <div>
-                        <router-link class="btn btn-outline-info mr-2 btn-sm"
+                        <router-link v-if="item.slug" class="btn btn-outline-info mr-2 btn-sm"
                             :to="{ name: `Details${route_prefix}`, params: {id: item.slug} }">
                             Details {{ route_prefix }}
                         </router-link>
@@ -88,14 +88,13 @@ export default {
         submitHandler: async function ($event) {
             if (this.param_id) {
                 let response = await this.update($event);
-                console.log(response);
-                if (response.status === 200) {
+                if ([200, 201].includes(response.status)) {
                     window.s_alert("data updated");
                     this.$router.push({ name: `Details${this.route_prefix}` });
                 }
             } else {
                 let response = await this.create($event);
-                if (response.status === 200) {
+                if ([200, 201].includes(response.status)) {
                     window.s_alert("data created");
                     this.$router.push({ name: `All${this.route_prefix}` });
                 }

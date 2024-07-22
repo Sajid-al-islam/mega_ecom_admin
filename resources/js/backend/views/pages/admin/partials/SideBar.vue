@@ -3,7 +3,7 @@
     <div id="sidebar-wrapper">
         <div class="brand-logo">
             <router-link :to="{ name: `adminDashboard` }" class="d-flex align-items-center">
-                <img src="https://files.etek.com.bd/images/etek_logo.png" class="logo-icon" alt="logo icon">
+                <!-- <img src="https://files.etek.com.bd/images/etek_logo.png" class="logo-icon" alt="logo icon"> -->
                 <h5 class="logo-text">ETEK ADMIN</h5>
             </router-link>
             <div class="close-btn"><i class="zmdi zmdi-close"></i></div>
@@ -13,7 +13,7 @@
             <li>
                 <router-link :to="{ name: `adminDashboard` }" class="" href="javascript:void();">
                     <div class="parent-icon">
-                        <img src="https://files.etek.com.bd/images/icon_dashboard.png" alt="">
+                        <!-- <img src="https://files.etek.com.bd/images/icon_dashboard.png" alt=""> -->
                     </div>
                     <div class="menu-title">Dashboard</div>
                 </router-link>
@@ -83,7 +83,7 @@
                         title: `Category`,
                     },
                     {
-                        route_name: `AllBrands`,
+                        route_name: `AllBrand`,
                         title: `Brand`,
                     },
                     {

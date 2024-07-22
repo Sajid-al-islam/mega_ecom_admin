@@ -16,24 +16,32 @@
                             <table class="table quick_modal_table">
                                 <tbody>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>:</th>
-                                        <th>
-                                            {{ item.name }}
+                                        <th colspan="3">
+                                            <img :src="item.image" alt="">
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th>Email</th>
+                                        <th>Title</th>
                                         <th>:</th>
                                         <th>
-                                            {{ item.email }}
+                                            {{ item.title }}
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th>Phone Number</th>
+                                        <th>Is Featured</th>
                                         <th>:</th>
                                         <th>
-                                            {{ item.phone_number }}
+                                            <input
+                                                :checked="item.is_featured"
+                                                class="form-check-input ml-0"
+                                                type="checkbox">
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>Serial</th>
+                                        <th>:</th>
+                                        <th>
+                                            {{ item.serial }}
                                         </th>
                                     </tr>
                                 </tbody>

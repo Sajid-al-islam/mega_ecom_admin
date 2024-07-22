@@ -15,28 +15,21 @@
                             <th></th>
                             <th></th>
                             <th>
-                                <img src="/avatar.png" alt="" style="height: 30px;">
+                                <img v-if="item.image" :src="item.image" alt="" style="height: 130px;">
                             </th>
                         </tr>
                         <tr>
-                            <th>Name</th>
+                            <th>Title</th>
                             <th>:</th>
                             <th>
-                                {{ item.name }}
+                                {{ item.title }}
                             </th>
                         </tr>
                         <tr>
-                            <th>Email</th>
+                            <th>Total Product</th>
                             <th>:</th>
                             <th>
-                                {{ item.email }}
-                            </th>
-                        </tr>
-                        <tr>
-                            <th>Phone Number</th>
-                            <th>:</th>
-                            <th>
-                                {{ item.phone_number }}
+                                {{ item.total_product }}
                             </th>
                         </tr>
                     </tbody>

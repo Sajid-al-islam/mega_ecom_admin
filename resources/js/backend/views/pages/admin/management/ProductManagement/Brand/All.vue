@@ -16,10 +16,10 @@
                                             <select-all />
                                         </th>
                                         <th class="w-10"> ID </th>
-                                        <th> name </th>
-                                        <th> email </th>
-                                        <th> phone </th>
-                                        <th> image </th>
+                                        <th> Title </th>
+                                        <th> Is Featured </th>
+                                        <th> Total Products </th>
+                                        <th> Image </th>
                                     </tr>
                                 </thead>
                                 <tbody v-if="all?.data?.length">
@@ -36,16 +36,21 @@
                                         </td>
                                         <td>
                                             <quick-view-column :item="item">
-                                                {{ item.name }}
+                                                {{ item.title }}
                                             </quick-view-column>
                                         </td>
                                         <td>
-                                            {{ item.email }}
+                                            <input
+                                                :checked="item.is_featured"
+                                                class="form-check-input ml-0"
+                                                type="checkbox">
                                         </td>
                                         <td>
-                                            {{ item.phone_number }}
+                                            {{ item.total_products }}
                                         </td>
-                                        <td><img src="/avatar.png" alt="" style="height: 30px;"></td>
+                                        <td>
+                                            <img v-if="item.image" :src="item.image" alt="" style="height: 30px;">
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -72,7 +77,7 @@
 
 <script>
 /** plugins */
-import { mapActions, mapState, mapWritableState } from 'pinia'
+import { mapActions, mapWritableState } from 'pinia'
 import { store as data_store } from './setup/store';
 import setup from "./setup";
 

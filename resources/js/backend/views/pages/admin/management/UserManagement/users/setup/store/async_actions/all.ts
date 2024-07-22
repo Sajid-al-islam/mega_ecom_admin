@@ -35,6 +35,7 @@ let execute = async () => {
             page: state.page.get(),
             paginate: state.paginate.get(),
             search_key: state.search_key.get(),
+            search: state.search_key.get(),
             sort_by_col: state.sort_by_col.get(),
             sort_type: state.sort_type.get(),
             status: state.status.get(),

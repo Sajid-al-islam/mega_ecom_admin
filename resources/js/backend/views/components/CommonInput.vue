@@ -3,21 +3,25 @@
         <label for="">
             {{ label || name }}
         </label>
+
         <div v-if="['text', 'number', 'password', 'email', 'date', 'month'].includes(type)" class="mt-1 mb-3">
-            <template v-if="name == 'tags'">
-                <!-- <input type="text" class="form-control" :value="tags" :name="name" data-role="tagsinput"> -->
-                <div class="bootstrap-tagsinput" style="min-height: 40px;">
-                    <template v-for="item in set_blog_tags" :key="item">
-                        <span class="tag badge badge-light">{{ item }}<span data-role="remove"
-                                @click=removeTag(item)></span></span>
-                    </template>
-                    <input type="text" placeholder="" v-on:keydown.enter="onEnter" v-model="tag_input_value">
-                </div>
-            </template>
-            <template v-else>
-                <input class="form-control form-control-square mb-2" :type="type" :name="name" :id="name" :value="value"
-                    @change="errorReset" />
-            </template>
+            <input class="form-control form-control-square mb-2"
+                :type="type"
+                :name="name"
+                :id="name"
+                :value="value"
+                @change="errorReset" />
+        </div>
+
+        <div v-if="type === 'checkbox'" class="mt-1 mb-3">
+            <input
+                :checked="value > 0"
+                :name="name"
+                :id="name"
+                :value="value"
+                @change="errorReset"
+                class="form-check-input ml-0"
+                type="checkbox">
         </div>
 
         <div v-if="type === 'textarea'" class="mt-1 mb-3">
@@ -25,7 +29,6 @@
                 @change="errorReset"></textarea> -->
             <!-- <div :id="name"></div> -->
             <text-editor :name="name" />
-
         </div>
 
         <div v-if="type === 'select'" class="mt-1 mb-3">
@@ -36,10 +39,12 @@
                 </option>
             </select>
         </div>
+
         <div v-if="type === 'file'" class="mt-1 mb-3">
             <image-component :name="name" :multiple="multiple" :accept="`.jpg,.jpeg,.png`"
                 :images="[value]"></image-component>
         </div>
+
     </div>
 </template>
 
@@ -107,7 +112,7 @@ export default {
     },
     created: async function () {
         // this.tags = this.value
-        console.log(this.value);
+        // console.log(this.value);
         // setTimeout(() => {
         //     console.log(this.tags);
         // }, 1000)

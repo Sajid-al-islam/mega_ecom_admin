@@ -5,7 +5,7 @@
                 <div class="card-header d-flex justify-content-between">
                     <h5 class="text-capitalize">{{ param_id ? 'Update' : 'Create' }} new {{ route_prefix }}</h5>
                     <div>
-                        <router-link class="btn btn-outline-info mr-2 btn-sm"
+                        <router-link v-if="item.slug" class="btn btn-outline-info mr-2 btn-sm"
                             :to="{ name: `Details${route_prefix}`, params: {id: item.slug} }">
                             Details {{ route_prefix }}
                         </router-link>
@@ -16,15 +16,17 @@
                 </div>
                 <div class="card-body card_body_fixed_height">
                     <div class="row">
-                        <div class="col-md-6" v-for="(form_field, index) in form_fields" :key="index">
-                            <common-input
-                                :label="form_field.label"
-                                :type="form_field.type"
-                                :name="form_field.name"
-                                :multiple="form_field.multiple"
-                                :value="form_field.value"
-                                :data_list="form_field.data_list" />
-                        </div>
+                        <template v-for="(form_field, index) in form_fields" v-bind:key="index">
+                            <div :class="form_field.row_col_class ? form_field.row_col_class :`col-md-6`" >
+                                <common-input
+                                    :label="form_field.label"
+                                    :type="form_field.type"
+                                    :name="form_field.name"
+                                    :multiple="form_field.multiple"
+                                    :value="form_field.value"
+                                    :data_list="form_field.data_list" />
+                            </div>
+                        </template>
                     </div>
                 </div>
                 <div class="card-footer">
@@ -88,14 +90,13 @@ export default {
         submitHandler: async function ($event) {
             if (this.param_id) {
                 let response = await this.update($event);
-                console.log(response);
-                if (response.status === 200) {
+                if ([200, 201].includes(response.status)) {
                     window.s_alert("data updated");
                     this.$router.push({ name: `Details${this.route_prefix}` });
                 }
             } else {
                 let response = await this.create($event);
-                if (response.status === 200) {
+                if ([200, 201].includes(response.status)) {
                     window.s_alert("data created");
                     this.$router.push({ name: `All${this.route_prefix}` });
                 }

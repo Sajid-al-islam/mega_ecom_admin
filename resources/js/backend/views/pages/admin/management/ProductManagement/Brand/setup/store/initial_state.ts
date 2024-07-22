@@ -1,4 +1,5 @@
 import {anyObject} from '../../../../../../../../common_types/object'
+import setup from '..';
 export const initialState = {
     /** loading status */
     is_loading: false,
@@ -12,8 +13,8 @@ export const initialState = {
     /*_______________*/
     /* data filters */
 
-    select_fields: ['id', 'name', 'email', 'photo', 'phone_number','slug', 'created_at', 'status'],
-    sort_by_cols: ['id', 'name', 'email', 'phone_number', 'created_at', 'status'],
+    select_fields: setup.select_fields,
+    sort_by_cols: setup.sort_by_cols,
     sort_by_col: 'id',
     sort_type: 'DESC',
 

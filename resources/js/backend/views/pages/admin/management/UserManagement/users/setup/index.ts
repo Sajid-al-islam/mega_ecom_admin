@@ -9,6 +9,9 @@ const setup: setup_type = {
     api_version: 'api/v1',
     api_end_point: 'users',
 
+    select_fields: ['id', 'name', 'email', 'photo', 'phone_number','slug', 'created_at', 'status'],
+    sort_by_cols: ['id', 'name', 'email', 'phone_number', 'created_at', 'status'],
+
     module_name: 'users',
     route_prefix: `User`,
     store_prefix: 'users',

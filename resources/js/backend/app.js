@@ -18,6 +18,7 @@ import TextEditor from '../backend/views/components/TextEditor.vue';
 // project rotes
 import admin_routes from "./views/pages/admin/partials/routes"
 // roters
+
 const router = createRouter({
     history: createWebHashHistory(),
     linkActiveClass: 'active',

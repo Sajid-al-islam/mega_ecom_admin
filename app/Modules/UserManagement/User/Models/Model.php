@@ -61,6 +61,11 @@ class Model extends Authenticatable
         return $q->where('status', 'active');
     }
 
+    public function scopeInactive($q)
+    {
+        return $q->where('status', 'inactive');
+    }
+
     public function role()
     {
         return $this->belongsTo(self::$userRoleModel, 'role_id', 'serial');

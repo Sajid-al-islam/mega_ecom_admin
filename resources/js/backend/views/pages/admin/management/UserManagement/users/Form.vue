@@ -5,6 +5,10 @@
                 <div class="card-header d-flex justify-content-between">
                     <h5 class="text-capitalize">{{ param_id ? 'Update' : 'Create' }} new {{ route_prefix }}</h5>
                     <div>
+                        <router-link class="btn btn-outline-info mr-2 btn-sm"
+                            :to="{ name: `Details${route_prefix}`, params: {id: item.slug} }">
+                            Details {{ route_prefix }}
+                        </router-link>
                         <router-link class="btn btn-outline-warning btn-sm" :to="{ name: `All${route_prefix}` }">
                             All {{ route_prefix }}
                         </router-link>
@@ -13,8 +17,12 @@
                 <div class="card-body card_body_fixed_height">
                     <div class="row">
                         <div class="col-md-6" v-for="(form_field, index) in form_fields" :key="index">
-                            <common-input :label="form_field.label" :type="form_field.type" :name="form_field.name"
-                                :multiple="form_field.multiple" :value="form_field.value"
+                            <common-input
+                                :label="form_field.label"
+                                :type="form_field.type"
+                                :name="form_field.name"
+                                :multiple="form_field.multiple"
+                                :value="form_field.value"
                                 :data_list="form_field.data_list" />
                         </div>
                     </div>

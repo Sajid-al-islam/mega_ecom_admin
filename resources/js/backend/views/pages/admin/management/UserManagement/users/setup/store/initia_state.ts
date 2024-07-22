@@ -19,6 +19,8 @@ export const initialState = {
 
     filter_criteria: {} as anyObject,
     all_data_count: 0, // total data in database
+    active_data_count: 0,
+    inactive_data_count: 0,
     page: 1,
     paginate: 13,
     search_key: ``,

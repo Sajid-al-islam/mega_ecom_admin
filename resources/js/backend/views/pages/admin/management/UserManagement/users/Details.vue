@@ -49,6 +49,16 @@
                         }">
                         Edit {{ setup.route_prefix }}
                     </router-link>
+
+                    <a href="" v-if="item.prev_slug" @click.prevent="get_data(item.prev_slug)" class="btn btn-secondary btn-sm ml-2">
+                        <i class="fa fa-angle-left"></i>
+                        Previous {{ setup.route_prefix }} ({{ item.prev_count }})
+                    </a>
+
+                    <a href="" v-if="item.next_slug" @click.prevent="get_data(item.next_slug)" class="btn btn-secondary btn-sm ml-2">
+                        Next {{ setup.route_prefix }} ({{ item.next_count }})
+                        <i class="fa fa-angle-right"></i>
+                    </a>
                 </div>
             </div>
         </form>
@@ -56,7 +66,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'pinia'
+import { mapActions, mapState, mapWritableState } from 'pinia'
 import { store } from './setup/store';
 import setup from "./setup";
 
@@ -66,16 +76,19 @@ export default {
     }),
     created: async function () {
         let id = this.param_id = this.$route.params.id;
-        await this.details(id);
+        await this.get_data(id);
     },
     methods: {
         ...mapActions(store, {
             details: 'details',
         }),
+        get_data: async function(slug){
+            this.item = {};
+            await this.details(slug)
+        },
     },
-
     computed: {
-        ...mapState(store, {
+        ...mapWritableState(store, {
             item: "item",
         }),
     },

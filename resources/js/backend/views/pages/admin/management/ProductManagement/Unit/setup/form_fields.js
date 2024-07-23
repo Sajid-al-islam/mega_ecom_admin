@@ -1,7 +1,7 @@
 export default [
     {
         name: "title",
-        label: "Variant Title",
+        label: "Unit Title",
         type: "text",
         value: "",
     },

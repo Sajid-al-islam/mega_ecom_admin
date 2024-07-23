@@ -39,7 +39,7 @@
                                             </quick-view-column>
                                         </td>
                                         <td>
-                                            {{ item?.product_varient_group?.title }}
+                                            {{ item?.group?.title }}
                                         </td>
                                         <td>
                                             {{ item.total_products }}

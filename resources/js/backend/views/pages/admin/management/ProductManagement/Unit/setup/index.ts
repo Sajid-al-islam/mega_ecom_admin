@@ -8,14 +8,14 @@ const setup: setup_type = {
 
     api_host: app_config.api_host,
     api_version: app_config.api_version,
-    api_end_point: 'product-varients',
+    api_end_point: 'product-units',
 
     module_name: 'unit',
     store_prefix: 'unit',
     route_prefix: `Unit`,
     route_path: `units`,
 
-    select_fields: ['id', 'title', 'product_varient_group_id','slug', 'created_at', 'status'],
+    select_fields: ['id', 'title', 'product_unit_group_id','slug', 'created_at', 'status'],
     sort_by_cols: ['id', 'title', 'created_at', 'status'],
 
     layout_title: prefix + ' Management',

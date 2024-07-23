@@ -28,10 +28,10 @@
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th>Varient Group</th>
+                                        <th>Unit Group</th>
                                         <th>:</th>
                                         <th>
-                                            {{ item?.product_varient_group?.title }}
+                                            {{ item?.group?.title }}
                                         </th>
                                     </tr>
                                     <tr>

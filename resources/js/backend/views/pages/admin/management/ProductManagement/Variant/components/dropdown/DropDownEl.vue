@@ -4,7 +4,7 @@
         <div class="selected_list" @click="show_list = true">
             <div v-for="item in selected" :key="item.id" :id="item.id" class="selected_item">
                 <div class="label">
-                    {{ item.name }}
+                    {{ item.title }}
                 </div>
                 <div @click.prevent="remove_item(item)" class="remove">
                     <i class="fa fa-close"></i>

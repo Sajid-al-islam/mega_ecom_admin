@@ -17,11 +17,11 @@
                 <div class="card-body card_body_fixed_height">
                     <div class="row">
                         <div class="col-12 mb-4">
-                            <label class="mb-2">Varient Group</label>
-                            <VarientGroupDropDown
+                            <label class="mb-2">Unit Group</label>
+                            <UnitGroupDropDown
                                 :multiple="false"
                                 :value="default_group"
-                                :name="`product_varient_group_id`"/>
+                                :name="`product_unit_group_id`"/>
                         </div>
                         <template v-for="(form_field, index) in form_fields" v-bind:key="index">
                             <div :class="form_field.row_col_class ? form_field.row_col_class :`col-md-6`" >
@@ -52,11 +52,11 @@ import { mapActions, mapState } from 'pinia'
 import { store } from './setup/store';
 import setup from "./setup";
 import form_fields from "./setup/form_fields";
-import VarientGroupDropDown from "../VariantGroup/components/dropdown/DropDownEl.vue"
+import UnitGroupDropDown from "../UnitGroup/components/dropdown/DropDownEl.vue"
 
 export default {
     components: {
-        VarientGroupDropDown,
+        UnitGroupDropDown,
     },
     data: () => ({
         route_prefix: '',
@@ -122,7 +122,7 @@ export default {
             is_loading: 'is_loading',
         }),
         default_group: function(){
-            return this.item && this.item.product_varient_group ? [this.item.product_varient_group] : [];
+            return this.item && this.item.group ? [this.item.group] : [];
         }
     },
 }

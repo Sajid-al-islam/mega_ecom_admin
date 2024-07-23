@@ -1,23 +1,24 @@
 export default [
     {
         name: "title",
-        label: "Title",
-        type: "text",
-        value: "",
-    },
-    {
-        name: "serial",
-        label: "serial",
+        label: "Brand Title",
         type: "text",
         value: "",
     },
 
-    // {
-    //     name: "brand_discount",
-    //     label: "Brand Discount % ( 1 - 100 )",
-    //     type: "text",
-    //     value: "",
-    // },
+    {
+        name: "serial",
+        label: "Brand Serial",
+        type: "number",
+        value: "",
+    },
+
+    {
+        name: "is_featured",
+        label: "Is Featured",
+        type: "checkbox",
+        value: "",
+    },
 
     {
         name: "image",
@@ -25,6 +26,6 @@ export default [
         type: "file",
         multiple: false,
         value: "",
+        row_col_class: "col-md-12",
     },
-
 ];

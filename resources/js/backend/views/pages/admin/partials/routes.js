@@ -7,8 +7,8 @@ import user_routes from "../management/UserManagement/users/setup/routes";
 import product_brand_routes from "../management/ProductManagement/Brand/setup/routes"
 import product_manufacture_routes from "../management/ProductManagement/Manufacture/setup/routes"
 import product_category_routes from "../management/ProductManagement/Category/setup/routes"
-import product_varient_group_routes from "../management/ProductManagement/Variant/VarientGroup/setup/routes"
 import product_varient_routes from "../management/ProductManagement/Variant/setup/routes"
+import product_varient_group_routes from "../management/ProductManagement/VariantGroup/setup/routes"
 import product_color_routes from "../management/ProductManagement/Color/setup/routes"
 import product_routes from "../management/ProductManagement/Product/setup/routes"
 

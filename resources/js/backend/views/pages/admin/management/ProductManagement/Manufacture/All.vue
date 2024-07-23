@@ -1,145 +1,127 @@
 <template>
-    <div class="container-fluid">
-        <!-- Container-fluid starts -->
+    <div>
         <div class="row">
             <div class="col-sm-12">
                 <div class="card">
-                    <div class="card-header d-flex justify-content-between">
-                        <h5 class="text-capitalize"> {{ page_title }}</h5>
-                        <div v-if="child_items.length" class="btn-group m-1 "
-                            onclick="document.getElementById('table-actions').classList.toggle('show')">
-                            <button type="button" class="btn btn-light waves-effect waves-light">Actions</button>
-                            <button type="button"
-                                class="btn btn-light split-btn-light dropdown-toggle dropdown-toggle-split waves-effect waves-light"
-                                data-toggle="dropdown" aria-expanded="false">
-                                <span class="caret"></span>
-                            </button>
-                            <div class="dropdown-menu" style="" id="table-actions">
-                                <a href="javaScript:void();" class="dropdown-item"
-                                    @click="bulkActions('delete')">Delete</a>
-                                <a href="javaScript:void();" class="dropdown-item"
-                                    @click="bulkActions('active')">Active</a>
-                                <a href="javaScript:void();" class="dropdown-item"
-                                    @click="bulkActions('inactive')">Inactive</a>
-
-                            </div>
-                        </div>
-                        <div>
-                            <router-link class="btn btn-outline-warning btn-sm"
-                                :to="{ name: `Create${route_prefix_name}` }">Create</router-link>
+                    <div class="card-header py-1 d-flex align-items-center justify-content-between">
+                        <all-page-header />
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive table_responsive card_body_fixed_height">
+                            <table class="table table-hover text-center table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th class="w-10 text-center">
+                                            <select-all />
+                                        </th>
+                                        <th class="w-10"> ID </th>
+                                        <th> Title </th>
+                                        <th> Total Products </th>
+                                        <th> Image </th>
+                                    </tr>
+                                </thead>
+                                <tbody v-if="all?.data?.length">
+                                    <tr v-for="(item) in all?.data" :key="item.id"
+                                        :class="`table_rows table_row_${item.id}`">
+                                        <td>
+                                            <table-row-action :item="item"></table-row-action>
+                                        </td>
+                                        <td>
+                                            <select-single :data="item" />
+                                        </td>
+                                        <td>
+                                            {{ item.id }}
+                                        </td>
+                                        <td>
+                                            <quick-view-column :item="item">
+                                                {{ item.title }}
+                                            </quick-view-column>
+                                        </td>
+                                        <td>
+                                            {{ item.total_products }}
+                                        </td>
+                                        <td>
+                                            <img v-if="item.image" :src="item.image" alt="" style="height: 30px;">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <div class="card-body table-responsive h-80vh">
-                        <table class="table table-hover text-center table-bordered">
-                            <thead>
-                                <tr>
-                                    <!-- <th class="w-10"><input type="checkbox" v-model="parent_item"
-                                            @click="toggleParentCheckbox"></th> -->
-                                    <th class="text-start">SL</th>
-                                    <th> image </th>
-                                    <th> title </th>
-                                    <th>status</th>
-                                    <th class="text-end">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody v-if="all_data.data?.length">
-                                <tr v-for="(item, index) in all_data.data" :key="item.id">
-                                    <!-- <td class="w-10">
-                                        <input @click="toggleChildCheckbox(item.id)"
-                                            :checked="child_items.includes(item.id)" type="checkbox">
-                                    </td> -->
-                                    <td class="text-start">{{ index + 1 }}</td>
-                                    <th> <img :src="item.image" alt="" height="20" width="40"> </th>
-                                    <th> {{ item.title }} </th>
-                                    <td>{{ item.status }}</td>
-                                    <td style="width: 100px;">
-                                        <div class="d-flex justify-content-between gap-2">
-                                            <!-- <router-link class="btn btn-sm btn-outline-success "
-                                                        :to="{ name: `Create${route_prefix}` }">
-                                                        <i class="fa fa-eye"></i>
-                                                    </router-link> -->
-                                            <router-link class="btn btn-sm btn-outline-warning mx-2" :to="{
-                                                name: `Create${route_prefix_name}`, query: {
-                                                    id: item.id,
-                                                },
-                                            }">
-                                                <i class="fa fa-pencil"></i>
-                                            </router-link>
-                                            <a @click.prevent="delete_data(item.id)"
-                                                class="btn btn-sm btn-outline-danger ">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <tbody v-else>
-                                <tr>
-                                    <td colspan="8" class="">
-                                        ...
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <hr>
+                    <div class="mx-3" v-if="typeof all == `object`">
+                        <pagination
+                            :data="all"
+                            :get_data="get_all_data"
+                            :set_paginate="set_paginate"
+                            :set_page="set_page" />
                     </div>
-                    <div class="mx-5">
-                        <pagination :data="all_data" :method="get_all_data" />
+                    <div class="card-footer py-2">
+                        <all-page-footer-actions></all-page-footer-actions>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Container-fluid starts -->
+        <export-all-loader />
+        <quick-view />
+        <filter-data />
     </div>
 </template>
 
 <script>
-import { mapActions, mapState } from 'pinia'
-import { user_setup_store } from './setup/store';
+/** plugins */
+import { mapActions, mapWritableState } from 'pinia'
+import { store as data_store } from './setup/store';
 import setup from "./setup";
+
+/** helper and actions */
+import get_all_data from "./setup/store/async_actions/all";
+
+/** components */
+import TableRowAction from './components/all_data_page/TableRowAction.vue';
+import AllPageHeader from './components/all_data_page/AllPageHeader.vue';
+import AllPageFooterActions from './components/all_data_page/AllPageFooterActions.vue';
+import SelectSingle from './components/all_data_page/select_data/SelectSingle.vue';
+import SelectAll from './components/all_data_page/select_data/SelectAll.vue';
+import ExportAllLoader from './components/all_data_page/ExportAllLoader.vue';
+import QuickView from './components/canvas/QuickView.vue';
+import QuickViewColumn from './components/all_data_page/QuickViewColumn.vue';
+import FilterData from './components/canvas/FilterData.vue';
+import DropDownEl from './components/dropdown/DropDownEl.vue';
+
 export default {
     data: () => ({
-        route_prefix: setup.route_prefix,
-        route_prefix_name: setup.route_prefix_name,
-        page_title: setup.page_title,
-
-        parent_item: false,
-        child_items: []
+        setup,
     }),
-    created: function () {
-        this.get_all_data()
+    created: async function () {
+        this.paginate = 10;
+        await this.get_all_data();
     },
     methods: {
-        ...mapActions(user_setup_store, {
-            get_all_data: 'all',
-            delete_data: 'delete',
-            bulk_action: 'bulk_action',
-        }),
-        toggleParentCheckbox() {
-            this.child_items = event.target.checked ? this.all_data.data.map(item => item.id) : []
-        },
-
-        toggleChildCheckbox(id) {
-            let isChecked = event.target.checked
-            if (isChecked) {
-                this.child_items.push(id)
-            } else {
-                this.child_items = this.child_items.filter(item => item != id)
-            }
-
-        },
-        bulkActions(action) {
-            this.bulk_action(action, this.child_items)
-            this.parent_item = false
-            this.child_items = []
-        }
-
+        ...mapActions(data_store,[
+            'set_page', // needs in pagination props
+            'set_paginate', // needs in pagination props
+        ]),
+        get_all_data,
     },
     computed: {
-        ...mapState(user_setup_store, {
-            all_data: 'all_data',
+        ...mapWritableState(data_store, {
+            all: 'all',
+            paginate: 'paginate',
         })
-    }
+    },
+    components: {
+        TableRowAction,
+        AllPageHeader,
+        AllPageFooterActions,
+        SelectSingle,
+        SelectAll,
+        ExportAllLoader,
+        QuickView,
+        QuickViewColumn,
+        FilterData,
+        DropDownEl,
+    },
 }
 </script>
 

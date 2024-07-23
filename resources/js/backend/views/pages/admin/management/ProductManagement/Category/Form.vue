@@ -170,7 +170,7 @@
 
 <script>
 import { mapActions, mapState } from 'pinia'
-import { user_setup_store } from './setup/store';
+import { store } from './setup/store';
 import setup from "./setup";
 import form_fields from "./setup/form_fields";
 import CatListRadio from '../../../../../components/CatListRadio.vue';
@@ -221,12 +221,12 @@ export default {
         }
     },
     methods: {
-        ...mapActions(user_setup_store, {
-            get_all_data: 'all',
-            get_single_data: 'get',
-            store_data: 'store',
-            update_data: 'update',
-        }),
+        // ...mapActions(user_setup_store, {
+        //     get_all_data: 'all',
+        //     get_single_data: 'get',
+        //     store_data: 'store',
+        //     update_data: 'update',
+        // }),
 
         submitHandler: async function ($event) {
             if (this.param_id) {
@@ -245,10 +245,10 @@ export default {
         },
 
         get_cats: function () {
-            axios.get('https://ctgcomputer.com/api/cats')
-                .then(res => {
-                    this.cat_list = res.data;
-                })
+            // axios.get('https://ctgcomputer.com/api/cats')
+            //     .then(res => {
+            //         this.cat_list = res.data;
+            //     })
         },
 
         set_value: function (key = '', value) {
@@ -258,10 +258,10 @@ export default {
     },
 
     computed: {
-        ...mapState(user_setup_store, {
-            single_data: "single_data",
-            all_data: 'all_data',
-        }),
+        // ...mapState(user_setup_store, {
+        //     single_data: "single_data",
+        //     all_data: 'all_data',
+        // }),
     },
 
 

@@ -79,7 +79,7 @@
                         title: `Products`,
                     },
                     {
-                        route_name: `AllCategories`,
+                        route_name: `AllCategory`,
                         title: `Category`,
                     },
                     {
@@ -87,8 +87,12 @@
                         title: `Brand`,
                     },
                     {
-                        route_name: `AllManufactures`,
+                        route_name: `AllManufacture`,
                         title: `Manufacture`,
+                    },
+                    {
+                        route_name: `AllVariantGroup`,
+                        title: `Varient Groups`,
                     },
                     {
                         route_name: `AllVarients`,

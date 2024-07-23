@@ -1,23 +1,17 @@
 export default [
     {
         name: "title",
-        label: "Title",
-        type: "text",
-        value: "",
-    },
-    {
-        name: "serial",
-        label: "serial",
+        label: "Manufacturer Title",
         type: "text",
         value: "",
     },
 
-    // {
-    //     name: "brand_discount",
-    //     label: "Brand Discount % ( 1 - 100 )",
-    //     type: "text",
-    //     value: "",
-    // },
+    {
+        name: "serial",
+        label: "Manufacturer Serial",
+        type: "number",
+        value: "",
+    },
 
     {
         name: "image",
@@ -25,7 +19,6 @@ export default [
         type: "file",
         multiple: false,
         value: "",
+        row_col_class: "col-md-12",
     },
-
-
 ];

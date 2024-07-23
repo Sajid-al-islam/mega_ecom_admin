@@ -9,6 +9,7 @@ import product_manufacture_routes from "../management/ProductManagement/Manufact
 import product_category_routes from "../management/ProductManagement/Category/setup/routes"
 import product_varient_routes from "../management/ProductManagement/Variant/setup/routes"
 import product_varient_group_routes from "../management/ProductManagement/VariantGroup/setup/routes"
+import product_varient_value_routes from "../management/ProductManagement/VariantValue/setup/routes"
 import product_color_routes from "../management/ProductManagement/Color/setup/routes"
 import product_routes from "../management/ProductManagement/Product/setup/routes"
 import product_unit_groups from "../management/ProductManagement/UnitGroup/setup/routes"
@@ -50,6 +51,7 @@ const routes = {
         product_category_routes,
         product_varient_group_routes,
         product_varient_routes,
+        product_varient_value_routes,
         product_color_routes,
         product_routes,
         product_unit_groups,

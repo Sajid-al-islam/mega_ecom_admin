@@ -99,6 +99,10 @@
                         title: `Varient`,
                     },
                     {
+                        route_name: `AllVariantValue`,
+                        title: `Varient Values`,
+                    },
+                    {
                         route_name: `AllUnitGroup`,
                         title: `Unit Group`,
                     },

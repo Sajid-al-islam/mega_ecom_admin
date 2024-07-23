@@ -73,4 +73,12 @@ Manufacturers
 7. count total product with each manufactures
 8. with, search and condition check
 
-    
+varients
+1. values return korbe
+   1. public function values(){
+        return $this->hasMany(\App\Modules\ProductManagement\ProductVarient\Models\Model::class,'product_varient_id');
+    }
+2. total product return korbe
+3. update store and update 
+   1. $requestData['product_varient_group_id'] = json_decode(request()->product_varient_group_id)[0];
+4. show api return with group info

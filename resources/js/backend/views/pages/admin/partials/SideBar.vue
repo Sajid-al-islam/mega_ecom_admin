@@ -95,7 +95,7 @@
                         title: `Varient Groups`,
                     },
                     {
-                        route_name: `AllVarients`,
+                        route_name: `AllVariant`,
                         title: `Varient`,
                     },
                 ]" />

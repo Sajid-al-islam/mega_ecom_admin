@@ -3,7 +3,7 @@
         <form @submit.prevent="submitHandler">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h5 class="text-capitalize">{{ param_id ? 'Update' : 'Create' }} new {{ route_prefix }}</h5>
+                    <h5 class="text-capitalize">{{ param_id ? 'Update' : 'Create' }} {{ route_prefix }}</h5>
                     <div>
                         <router-link v-if="item.slug" class="btn btn-outline-info mr-2 btn-sm"
                             :to="{ name: `Details${route_prefix}`, params: {id: item.slug} }">

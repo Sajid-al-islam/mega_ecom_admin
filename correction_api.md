@@ -37,3 +37,5 @@
     ]);
 
     search conditions
+
+2. change delete method into post method

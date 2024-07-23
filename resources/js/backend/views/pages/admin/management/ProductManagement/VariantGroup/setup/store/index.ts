@@ -11,7 +11,9 @@ import restore from "./async_actions/restore";
 import destroy from "./async_actions/destroy";
 
 /** actions */
+import clear_filter_criteria from "./actions/clear_filter_criteria";
 import set_filter_criteria from "./actions/set_filter_criteria";
+import set_is_filter_active from "./actions/set_is_filter_active";
 import set_item from "./actions/set_item";
 import set_only_latest_data from "./actions/set_only_latest";
 import set_page from "./actions/set_page";
@@ -19,8 +21,9 @@ import set_paginate from "./actions/set_paginate";
 import set_show_details_canvas from "./actions/set_show_details_canvas";
 import set_show_filter_canvas from "./actions/set_show_filter_canvas";
 import set_status from "./actions/set_status";
+import setup from "..";
 
-export const store = defineStore("users_store", {
+export const store = defineStore(setup.store_prefix, {
     state: () => initialState,
     getters: {},
     actions: {
@@ -38,6 +41,8 @@ export const store = defineStore("users_store", {
         set_paginate,
         set_show_details_canvas,
         set_item,
+        clear_filter_criteria,
+        set_is_filter_active,
         set_show_filter_canvas,
         set_filter_criteria,
         set_status,

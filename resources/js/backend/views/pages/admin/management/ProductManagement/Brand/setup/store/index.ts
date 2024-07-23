@@ -19,8 +19,9 @@ import set_paginate from "./actions/set_paginate";
 import set_show_details_canvas from "./actions/set_show_details_canvas";
 import set_show_filter_canvas from "./actions/set_show_filter_canvas";
 import set_status from "./actions/set_status";
+import setup from "..";
 
-export const store = defineStore("users_store", {
+export const store = defineStore(setup.store_prefix, {
     state: () => initialState,
     getters: {},
     actions: {

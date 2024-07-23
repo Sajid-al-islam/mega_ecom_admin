@@ -65,8 +65,8 @@ let execute = async () => {
         if(value){
             full_url.searchParams.set(`filter_criterias[${index}][key]`, param);
             full_url.searchParams.set(`filter_criterias[${index}][value]`, value);
-            full_url.searchParams.set(`condition[${index}][key]`, param);
-            full_url.searchParams.set(`condition[${index}][value]`, value);
+            // full_url.searchParams.set(`condition[${index}][key]`, param);
+            // full_url.searchParams.set(`condition[${index}][value]`, value);
             index++;
             full_url.searchParams.set(param, value)
         }

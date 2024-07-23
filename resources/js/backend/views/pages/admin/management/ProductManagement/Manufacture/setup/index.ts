@@ -1,3 +1,4 @@
+import app_config from '../../../../app_config';
 import setup_type from './setup_type';
 
 const prefix: string = 'Manufacture';
@@ -5,8 +6,8 @@ const setup: setup_type = {
     prefix,
     permission: [`admin`,`super_admin`],
 
-    api_host: location.origin,
-    api_version: 'api/v1',
+    api_host: app_config.api_host,
+    api_version: app_config.api_version,
     api_end_point: 'product-menufacturers',
 
     module_name: 'manufactures',

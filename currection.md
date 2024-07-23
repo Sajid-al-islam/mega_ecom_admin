@@ -83,5 +83,14 @@ varients
    1. $requestData['product_varient_group_id'] = json_decode(request()->product_varient_group_id)[0];
 4. show api return with group info
 
-product unit group
+product unit and unit group
     1. all api er sathe product count hobe
+    2. product unit e group er sathe relation hobe
+       1. use App\Modules\ProductManagement\ProductUnitGroup\Models\Model as ProductUnitGroup;
+       2. public function group()
+        {
+            return $this->belongsTo(ProductUnitGroup::class, 'product_unit_group_id');
+        }
+    3. store and update action update
+       1.  $requestData['product_unit_group_id'] = json_decode(request()->product_unit_group_id)[0];
+    4. unit details api te group info asbe  

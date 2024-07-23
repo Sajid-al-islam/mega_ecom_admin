@@ -26,13 +26,6 @@
                             </th>
                         </tr>
                         <tr>
-                            <th>Varient Group</th>
-                            <th>:</th>
-                            <th>
-                                {{ item?.product_varient_group?.title }}
-                            </th>
-                        </tr>
-                        <tr>
                             <th>Total Product</th>
                             <th>:</th>
                             <th>

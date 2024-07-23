@@ -98,6 +98,14 @@
                         route_name: `AllVariant`,
                         title: `Varient`,
                     },
+                    {
+                        route_name: `AllUnitGroup`,
+                        title: `Unit Group`,
+                    },
+                    {
+                        route_name: `AllUnit`,
+                        title: `Units`,
+                    },
                 ]" />
 
             <side-bar-drop-down-menus :icon_image="`https://files.etek.com.bd/images/icon_sales.png`"

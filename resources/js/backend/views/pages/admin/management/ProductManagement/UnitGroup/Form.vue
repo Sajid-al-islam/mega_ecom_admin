@@ -3,7 +3,7 @@
         <form @submit.prevent="submitHandler">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h5 class="text-capitalize">{{ param_id ? 'Update' : 'Create' }} {{ route_prefix }}</h5>
+                    <h5 class="text-capitalize">{{ param_id ? 'Update' : 'Create' }} {{ setup.prefix }}</h5>
                     <div>
                         <router-link v-if="item.slug" class="btn btn-outline-info mr-2 btn-sm"
                             :to="{ name: `Details${route_prefix}`, params: {id: item.slug} }">
@@ -16,13 +16,6 @@
                 </div>
                 <div class="card-body card_body_fixed_height">
                     <div class="row">
-                        <div class="col-12 mb-4">
-                            <label class="mb-2">Varient Group</label>
-                            <VarientGroupDropDown
-                                :multiple="false"
-                                :value="default_group"
-                                :name="`product_varient_group_id`"/>
-                        </div>
                         <template v-for="(form_field, index) in form_fields" v-bind:key="index">
                             <div :class="form_field.row_col_class ? form_field.row_col_class :`col-md-6`" >
                                 <common-input
@@ -62,6 +55,7 @@ export default {
         route_prefix: '',
         form_fields,
         param_id: null,
+        setup,
     }),
     created: async function () {
         let id = this.param_id = this.$route.params.id;

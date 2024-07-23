@@ -17,7 +17,6 @@
                                         </th>
                                         <th class="w-10"> ID </th>
                                         <th> Title </th>
-                                        <th> Group </th>
                                         <th> Total Products </th>
                                     </tr>
                                 </thead>
@@ -37,9 +36,6 @@
                                             <quick-view-column :item="item">
                                                 {{ item.title }}
                                             </quick-view-column>
-                                        </td>
-                                        <td>
-                                            {{ item?.product_varient_group?.title }}
                                         </td>
                                         <td>
                                             {{ item.total_products }}

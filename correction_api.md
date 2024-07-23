@@ -15,12 +15,12 @@
     $status = request()->input('status') ?? 'active';
     $fields = request()->input('fields') ?? ['id', 'title', "status", 'slug','created_at'];
 
-    if(request()->has('with')){
-        $with = request()->with;
+    if (request()->has('with')) {
+        $with = array_merge($with, request()->with);
     }
 
     if (request()->has('condition')) {
-        $condition = request()->condition;
+        $condition = array_merge($condition, request()->condition);
     }
 
     $start_date = request()->input('start_date');

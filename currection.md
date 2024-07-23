@@ -82,3 +82,6 @@ varients
 3. update store and update 
    1. $requestData['product_varient_group_id'] = json_decode(request()->product_varient_group_id)[0];
 4. show api return with group info
+
+product unit group
+    1. all api er sathe product count hobe

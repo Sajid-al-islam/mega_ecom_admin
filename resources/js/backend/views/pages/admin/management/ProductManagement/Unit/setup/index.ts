@@ -12,7 +12,7 @@ const setup: setup_type = {
 
     module_name: 'unit',
     store_prefix: 'unit',
-    route_prefix: `unit`,
+    route_prefix: `Unit`,
     route_path: `units`,
 
     select_fields: ['id', 'title', 'product_varient_group_id','slug', 'created_at', 'status'],

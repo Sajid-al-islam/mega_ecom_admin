@@ -111,4 +111,6 @@ product varient
 
 tag management not connected to main route
 
-
+category api
+    1. make as featured and nav api
+    2. 

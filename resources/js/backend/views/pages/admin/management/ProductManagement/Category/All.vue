@@ -18,6 +18,7 @@
                                         <th class="w-10"> ID </th>
                                         <th> Title </th>
                                         <th> Is Featured </th>
+                                        <th> Is Nav </th>
                                         <th> Total Products </th>
                                         <th> Image </th>
                                     </tr>
@@ -42,6 +43,12 @@
                                         <td>
                                             <input
                                                 :checked="item.is_featured"
+                                                class="form-check-input ml-0"
+                                                type="checkbox">
+                                        </td>
+                                        <td>
+                                            <input
+                                                :checked="item.is_nav"
                                                 class="form-check-input ml-0"
                                                 type="checkbox">
                                         </td>

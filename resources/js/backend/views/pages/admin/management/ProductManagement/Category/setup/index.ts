@@ -1,20 +1,22 @@
+import app_config from '../../../../app_config';
 import setup_type from './setup_type';
 
 const prefix: string = 'Category';
 const setup: setup_type = {
     prefix,
-    permission: [`admin`,`super_admin`],
+    permission: [`admin`, `super_admin`],
 
-    api_host: location.origin,
-    api_version: 'api/v1',
+    api_host: app_config.api_host,
+    api_version: app_config.api_version,
     api_end_point: 'product-categories',
 
-    module_name: 'categories',
+    module_name: 'category',
+    store_prefix: 'category',
     route_prefix: `Category`,
-    store_prefix: 'categories',
+    route_path: `categories`,
 
-    select_fields: ['id', 'title', 'serial', 'is_featured', 'image','slug', 'created_at', 'status'],
-    sort_by_cols: ['id', 'title', 'serial', 'is_featured', 'created_at', 'status'],
+    select_fields: ['id', 'title', 'parent_id', 'product_category_group_id', 'is_nav', 'is_featured', 'image', 'slug', 'created_at', 'status'],
+    sort_by_cols: ['id', 'title', 'is_featured', 'is_nav', 'created_at', 'status'],
 
     layout_title: prefix + ' Management',
     page_title: `${prefix} Management`,

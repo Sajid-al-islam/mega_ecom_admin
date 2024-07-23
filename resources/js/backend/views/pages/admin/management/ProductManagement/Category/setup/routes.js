@@ -8,7 +8,7 @@ let route_prefix = setup.route_prefix;
 
 const routes =
 {
-    path: 'brands',
+    path: setup.route_path,
     component: Layout,
     children: [
         {

@@ -4,10 +4,10 @@
         <form @submit.prevent="submitHandler">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
-                    <h5 class="text-capitalize">{{ param_id ? 'Update' : 'Create' }} new {{ route_prefix }}</h5>
+                    <h5 class="text-capitalize">{{ param_id ? 'Update' : 'Create' }} new {{ setup.prefix }}</h5>
                     <div>
-                        <router-link class="btn btn-outline-warning btn-sm" :to="{ name: `All${route_prefix_name}` }">
-                            All {{ route_prefix }}
+                        <router-link class="btn btn-outline-warning btn-sm" :to="{ name: `All${setup.route_prefix}` }">
+                            All {{ setup.route_prefix }}
                         </router-link>
                     </div>
                 </div>
@@ -38,14 +38,14 @@
                                         <div class="form-group" style="max-width: 150px;">
                                             <label for="">Is Nav Category</label>
                                             <div class="mt-1 mb-3">
-                                                <input class="form-control mb-2" type="checkbox" name="is_nav"
+                                                <input class="form-check-input mb-2 ml-0" type="checkbox" name="is_nav"
                                                     id="is_nav">
                                             </div>
                                         </div>
                                         <div class="form-group" style="max-width: 150px;">
                                             <label for="">Is Featured</label>
                                             <div class="mt-1 mb-3">
-                                                <input class="form-control mb-2" type="checkbox" name="is_featured"
+                                                <input class="form-check-input mb-2 ml-0" type="checkbox" name="is_featured"
                                                     id="is_featured">
                                             </div>
                                         </div>
@@ -101,7 +101,7 @@
                                 <div class="mt-1 mb-3">
                                     <!-- <input class="form-control form-control-square mb-2" type="text"
                                         name="page_header_description" id="title"> -->
-                                    <text-editor :set_value="set_value" :data_store="`page_header_description`" />
+                                    <!-- <text-editor :set_value="set_value" :data_store="`page_header_description`" /> -->
                                     <div class="text_output" v-html="page_header_description"></div>
                                 </div>
                             </div>
@@ -117,7 +117,7 @@
                                 <div class="mt-1 mb-3">
                                     <!-- <input class="form-control form-control-square mb-2" type="text"
                                         name="page_full_description" id="title"> -->
-                                    <text-editor :set_value="set_value" :data_store="`page_full_description`" />
+                                    <!-- <text-editor :set_value="set_value" :data_store="`page_full_description`" /> -->
                                     <div class="text_output" v-html="page_full_description"></div>
                                 </div>
                             </div>
@@ -173,97 +173,86 @@ import { mapActions, mapState } from 'pinia'
 import { store } from './setup/store';
 import setup from "./setup";
 import form_fields from "./setup/form_fields";
-import CatListRadio from '../../../../../components/CatListRadio.vue';
-import TextEditor from '../../../../../components/TextEditor.vue';
+import UnitGroupDropDown from "../UnitGroup/components/dropdown/DropDownEl.vue"
 
 export default {
-    components: { CatListRadio, TextEditor },
+    components: {
+        UnitGroupDropDown,
+    },
     data: () => ({
-        route_prefix: setup.route_prefix,
-        route_prefix_name: setup.route_prefix_name,
-
+        route_prefix: '',
         form_fields,
         param_id: null,
-
-        cat_list: [],
-
-        page_full_description: '',
+        setup,
         page_header_description: '',
+        page_full_description: '',
+        cat_list: [],
     }),
     created: async function () {
-        let id = this.$route.query.id;
-        this.form_fields.forEach((item) => {
-            item.value = "";
-        });
+        let id = this.param_id = this.$route.params.id;
+        this.route_prefix = setup.route_prefix;
+        this.set_item({});
+        this.reset_fields();
 
-        await this.get_cats();
-
-        return;
-        await this.get_all_data()
+        await this.get_categories();
         if (id) {
-            this.param_id = id;
-            await this.get_single_data(id);
-            if (this.single_data) {
-                this.form_fields.forEach((field, index) => {
-                    Object.entries(this.single_data).forEach((value) => {
-                        if (field.name == value[0]) {
-                            this.form_fields[index].value = value[1];
-                        }
-
-
-                    });
-                });
-            }
-        } else {
-            this.form_fields.forEach((item) => {
-                item.value = "";
-            });
+            this.set_fields(id);
         }
     },
     methods: {
-        // ...mapActions(user_setup_store, {
-        //     get_all_data: 'all',
-        //     get_single_data: 'get',
-        //     store_data: 'store',
-        //     update_data: 'update',
-        // }),
+        ...mapActions(store, {
+            create: 'create',
+            update: 'update',
+            details: 'details',
+            set_item: 'set_item',
+        }),
+        get_categories: function(){
+            
+        },
+        reset_fields: function () {
+            this.form_fields.forEach((item) => {
+                item.value = "";
+            });
+        },
+        set_fields: async function (id) {
+            this.param_id = id;
+            await this.details(id);
+            if (this.item) {
+                this.form_fields.forEach((field, index) => {
+                    Object.entries(this.item).forEach((value) => {
+                        if (field.name == value[0]) {
+                            this.form_fields[index].value = value[1];
+                        }
+                    });
+                });
+            }
+        },
 
         submitHandler: async function ($event) {
             if (this.param_id) {
-                let response = await this.update_data($event.target, this.param_id);
-                if (response.data.status === "success") {
-                    window.s_alert(response.data.message);
-                    this.$router.push({ name: `All${this.route_prefix}` });
+                let response = await this.update($event);
+                if ([200, 201].includes(response.status)) {
+                    window.s_alert("data updated");
+                    this.$router.push({ name: `Details${this.route_prefix}` });
                 }
             } else {
-                let response = await this.store_data($event.target);
-                if (response.data.status === "success") {
-                    window.s_alert(response.data.message);
+                let response = await this.create($event);
+                if ([200, 201].includes(response.status)) {
+                    window.s_alert("data created");
                     this.$router.push({ name: `All${this.route_prefix}` });
                 }
             }
         },
-
-        get_cats: function () {
-            // axios.get('https://ctgcomputer.com/api/cats')
-            //     .then(res => {
-            //         this.cat_list = res.data;
-            //     })
-        },
-
-        set_value: function (key = '', value) {
-            this[key] = value;
-        }
-
     },
 
     computed: {
-        // ...mapState(user_setup_store, {
-        //     single_data: "single_data",
-        //     all_data: 'all_data',
-        // }),
+        ...mapState(store, {
+            item: "item",
+            is_loading: 'is_loading',
+        }),
+        default_group: function(){
+            return this.item && this.item.group ? [this.item.group] : [];
+        }
     },
-
-
 }
 </script>

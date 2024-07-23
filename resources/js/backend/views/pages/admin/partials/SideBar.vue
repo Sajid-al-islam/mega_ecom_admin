@@ -110,6 +110,14 @@
                         route_name: `AllUnit`,
                         title: `Units`,
                     },
+                    {
+                        route_name: `AllProductTag`,
+                        title: `Product Tags`,
+                    },
+                    {
+                        route_name: `AllProductCategoryTag`,
+                        title: `Product Tags`,
+                    },
                 ]" />
 
             <side-bar-drop-down-menus :icon_image="`https://files.etek.com.bd/images/icon_sales.png`"

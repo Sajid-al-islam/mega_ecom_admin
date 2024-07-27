@@ -17,6 +17,7 @@
                                         </th>
                                         <th class="w-10"> ID </th>
                                         <th> Title </th>
+                                        <th> Parent </th>
                                         <th> Is Featured </th>
                                         <th> Is Nav </th>
                                         <th> Total Products </th>
@@ -41,6 +42,9 @@
                                             </quick-view-column>
                                         </td>
                                         <td>
+                                            {{ item?.parent?.title }}
+                                        </td>
+                                        <td>
                                             <input
                                                 :checked="item.is_featured"
                                                 class="form-check-input ml-0"
@@ -56,7 +60,9 @@
                                             {{ item.total_products }}
                                         </td>
                                         <td>
-                                            <img v-if="item.image" :src="item.image" alt="" style="height: 30px;">
+                                            <img v-if="item.image"
+                                                :src="load_image(item.image)" alt=""
+                                                style="height: 30px;">
                                         </td>
                                     </tr>
                                 </tbody>
@@ -71,7 +77,13 @@
                             :set_page="set_page" />
                     </div>
                     <div class="card-footer py-2">
-                        <all-page-footer-actions></all-page-footer-actions>
+                        <all-page-footer-actions>
+                            <router-link href="" :to="{name:'AllCategories'}"
+                                class="btn action_btn mr-2 btn-sm btn-secondary d-flex align-content-center align-items-center">
+                                <i class="fa fa-list mr-2"></i>
+                                All Category Tree
+                            </router-link>
+                        </all-page-footer-actions>
                     </div>
                 </div>
             </div>

@@ -3,6 +3,7 @@ import All from "../All.vue";
 import Form from "../Form.vue";
 import Details from "../Details.vue";
 import Layout from "../Layout.vue";
+import CatList from "../CatList.vue";
 
 let route_prefix = setup.route_prefix;
 
@@ -15,6 +16,11 @@ const routes =
             path: '',
             name: "All" + route_prefix,
             component: All,
+        },
+        {
+            path: 'all-tree',
+            name: "AllCategories",
+            component: CatList,
         },
         {
             path: "create",

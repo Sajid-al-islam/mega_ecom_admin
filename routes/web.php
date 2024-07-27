@@ -17,6 +17,13 @@ use Illuminate\Support\Str;
 Route::get('/', function () {
     return redirect()->route('login');
 });
+Route::group([
+    'prefix' => '',
+    'namespace' => 'App\Http\Controllers',
+], function () {
+    Route::get('/cache/{file_name}', 'AssetController@cache')->where('file_name','.*');
+});
+
 Route::get('/home', function () {
     return view('home');
 });

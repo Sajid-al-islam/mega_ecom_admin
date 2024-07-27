@@ -3,7 +3,7 @@
         <router-link :to="{name: route_name}">
             <div class="parent-icon">
                 <!-- <i :class="icon"></i> -->
-                <!-- <img :src="icon_image" alt=""> -->
+                <img :src="icon_image" alt="">
             </div>
             <div class="menu-title">{{ menu_title }}</div>
             <!-- <div class="badge badge-light ml-auto">New</div> -->

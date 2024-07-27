@@ -15,7 +15,11 @@ const setup: setup_type = {
     route_prefix: `Category`,
     route_path: `categories`,
 
-    select_fields: ['id', 'title', 'parent_id', 'product_category_group_id', 'is_nav', 'is_featured', 'image', 'slug', 'created_at', 'status'],
+    select_fields: [
+        'id', 'title', 'parent_id', 'product_category_group_id',
+        'is_nav', 'is_featured', 'image', 'slug', 'created_at', 'status',
+        'meta_title', 'meta_keywords', 'meta_description', 'search_keywords',
+    ],
     sort_by_cols: ['id', 'title', 'is_featured', 'is_nav', 'created_at', 'status'],
 
     layout_title: prefix + ' Management',

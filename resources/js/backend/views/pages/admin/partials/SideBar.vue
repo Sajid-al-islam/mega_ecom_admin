@@ -13,7 +13,7 @@
             <li>
                 <router-link :to="{ name: `adminDashboard` }" class="" href="javascript:void();">
                     <div class="parent-icon">
-                        <!-- <img src="https://files.etek.com.bd/images/icon_dashboard.png" alt=""> -->
+                        <img src="https://files.etek.com.bd/images/icon_dashboard.png" alt="">
                     </div>
                     <div class="menu-title">Dashboard</div>
                 </router-link>
@@ -71,12 +71,20 @@
             <side-bar-drop-down-menus :icon_image="`https://files.etek.com.bd/images/icon_product_management.png`"
                 :icon="`fa fa-plus`" :menu_title="`Products`" :menus="[
                     {
-                        route_name: `CreateProducts`,
+                        route_name: `CreateProduct`,
                         title: `Create Product`,
                     },
                     {
-                        route_name: `AllProducts`,
+                        route_name: `AllProduct`,
                         title: `Products`,
+                    },
+                    {
+                        route_name: `BarcodeGenerator`,
+                        title: `Barcode Generate`,
+                    },
+                    {
+                        route_name: `AllCategoryGroup`,
+                        title: `Category Group`,
                     },
                     {
                         route_name: `AllCategory`,
@@ -116,7 +124,7 @@
                     },
                     {
                         route_name: `AllProductCategoryTag`,
-                        title: `Product Tags`,
+                        title: `Product Category Tags`,
                     },
                 ]" />
 

@@ -5,27 +5,27 @@ export default [
         type: "text",
         value: "",
     },
+
     {
         name: "serial",
-        label: "Brand serial",
-        type: "text",
+        label: "Brand Serial",
+        type: "number",
         value: "",
     },
 
-    // {
-    //     name: "brand_discount",
-    //     label: "Brand Discount % ( 1 - 100 )",
-    //     type: "text",
-    //     value: "",
-    // },
+    {
+        name: "is_featured",
+        label: "Is Featured",
+        type: "checkbox",
+        value: "",
+    },
 
     {
         name: "image",
-        label: "Brand Image",
+        label: "Image",
         type: "file",
         multiple: false,
         value: "",
+        row_col_class: "col-md-12",
     },
-
-
 ];

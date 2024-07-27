@@ -71,17 +71,52 @@ function errorReset(event) {
     console.log(event.target)
 }
 
+window.set_form_data = function (data, selector = "form") {
+
+    for (const key in data) {
+        if (Object.hasOwnProperty.call(data, key)) {
+            const value = data[key];
+            let input = document.querySelector(`${selector} input[name="${key}"]`) || document.querySelector(`${selector} input[id="${key}"]`);
+            let select = document.querySelector(`${selector} select[name="${key}"]`) || document.querySelector(`${selector} select[id="${key}"]`);
+            let textarea = document.querySelector(`${selector} textarea[name="${key}"]`) || document.querySelector(`${selector} textarea[id="${key}"]`);
+
+            if (input) {
+                if (['text', 'email', 'number', 'date', 'time'].includes(input.type)) {
+                    input.value = value;
+                }
+                if (input.type == 'file') {
+                    let img = document.querySelector('.uploaded_image_preview img');
+                    if(img){
+                        // img.src = value
+                    }
+                }
+                if(input.type == 'checkbox' && value){
+                    input.checked = true;
+                }
+            }
+            if (select) {
+                select.value = (value);
+            }
+            if (textarea) {
+                textarea.value = (value);
+            }
+        }
+    }
+
+};
+
 window.render_form_errors = function (object, selector = "name") {
+    console.log(object);
     for (const key in object) {
         if (Object.hasOwnProperty.call(object, key)) {
             const element = object[key];
-            // console.log("resss",element);
+            // console.log(key,element);
             let el = document.querySelector(`input[${selector}="${key}`);
-            let txarea = document.querySelector(`textarea[${selector}="${key}`);
+            let textarea = document.querySelector(`textarea[${selector}="${key}`);
             if (!el) {
                 el = document.getElementById(`${key}`);
             }
-            if (txarea) {
+            if (textarea) {
                 el = document.querySelector(`textarea[${selector}="${key}`);
             }
 
@@ -124,7 +159,7 @@ window.axios.interceptors.response.use(
         // if(error.response.status == 401){
         //     window.clear_session();
         // }
-        console.log(error);
+        // console.log(error);
         // let status = error.response.status;
         // window.s_alert('error '+status+': '+error.response?.statusText,'error')
         throw error;

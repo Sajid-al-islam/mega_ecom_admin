@@ -5,9 +5,11 @@
         </div>
         <div class="editor_description_box" :class="{active: is_show}">
             <div class="editor_box" :id="data_store">
-                <div :id="`editor`+data_store" v-html="data"></div>
+                <div class="container">
+                    <div :id="`editor`+data_store" v-html="data"></div>
+                    <button type="button" @click="is_show = !is_show;" class="btn btn-info my-3">Close</button>
+                </div>
             </div>
-            <button type="button" @click="is_show = !is_show;" class="btn btn-info mb-3">Close</button>
         </div>
     </div>
 </template>
@@ -20,7 +22,11 @@ export default {
             default: '',
         },
         data_store: String,
-        set_value: Function,
+        set_value: {
+            type: Function,
+            default: () => '',
+            required: true,
+        },
     },
     created: function () {
         if (this.default_data) {
@@ -32,8 +38,8 @@ export default {
         //     that.editor = CKEDITOR.replace('editor');
         // }, 500);
     },
-    mounted: function(){
-        this.editor = CKEDITOR.replace('editor'+this.data_store);
+    mounted: function () {
+        this.editor = CKEDITOR.replace('editor' + this.data_store);
     },
     watch: {
         'data': {
@@ -43,7 +49,7 @@ export default {
         },
         'editor': {
             handler: function (v) {
-                v.on('change',this.set_data);
+                v.on('change', this.set_data);
             },
         }
     },
@@ -56,9 +62,9 @@ export default {
         onEditorInput: function (data, event, editor) {
             // console.log(data);
         },
-        set_data: function(e){
+        set_data: function (e) {
             this.data = e.editor.getData();
-            console.log(this.data);
+            // console.log(this.data);
         }
     },
 }
@@ -109,7 +115,8 @@ export default {
 .ck-content .table {
     float: left;
 }
-.cke_notifications_area{
+
+.cke_notifications_area {
     display: none !important;
 }
 

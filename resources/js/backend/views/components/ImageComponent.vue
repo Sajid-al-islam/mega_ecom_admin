@@ -6,15 +6,15 @@
 
 
         <template v-if="multiple">
-            <div class="uploaded_image_preview my-2 d-flex gap-1 flex-wrap" v-show="images?.lenght">
-                <img v-for="image in images" :key="image" :src="image" :class="image != '' ? 'border' : ''" style="width: 200px; height: 80px;
+            <div class="uploaded_image_preview my-2 d-flex gap-1 flex-wrap" >
+                <img v-show="images?.length" v-for="image in images" :key="image" :src="image" :class="image != '' ? 'border' : ''" style="width: 200px; height: 80px;
                 object-fit: contain;" alt="image" target="_black">
             </div>
         </template>
 
         <template v-else>
-            <div class="uploaded_image_preview my-2 d-flex gap-1 flex-wrap" v-if="value">
-                <img :src="value" style="width: 200px; height: 80px;
+            <div class="uploaded_image_preview my-2 d-flex gap-1 flex-wrap" >
+                <img v-if="value" :src="value" style="max-width: 200px; height: 80px;
                 object-fit: contain;" alt="image" target="_black" class="border">
             </div>
         </template>
@@ -52,7 +52,6 @@ export default {
     }),
     watch: {
         images: function (v) {
-            console.log(v);
             this.component_images = this.images;
             this.value = this.images[0];
         }

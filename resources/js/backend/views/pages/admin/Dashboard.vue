@@ -15,18 +15,20 @@
                                         {{ parseInt(Math.random() * 10000000) }}
                                     </b>
                                 </h4>
-                                <p class="mb-0 font-13 text-white">
-                                    <i class="bx bxs-up-arrow align-middle"></i>
-                                    <sub class="text-info">
-                                        {{ new Date().toDateString() }}
-                                    </sub>
+                                <div class="mb-0 font-13 text-white">
+                                    <div>
+                                        <i class="bx text-danger bxs-down-arrow align-middle mr-1"></i>
+                                        <sub class="text-info">
+                                            {{ new Date().toDateString() }}
+                                        </sub>
+                                    </div>
                                     <span class="text-nowrap">
                                         ৳
                                         <b>
                                             {{ parseInt(Math.random() * 1000000) }}
                                         </b>
                                     </span>
-                                </p>
+                                </div>
                             </div>
                             <div class="widgets-icons bg-light-transparent p-1 bg-white ms-auto">
                                 <img src="https://files.etek.com.bd/images/income.png" class="img-fluid" alt="">
@@ -48,18 +50,20 @@
                                         {{ parseInt(Math.random() * 10000000) }}
                                     </b>
                                 </h4>
-                                <p class="mb-0 font-13 text-white">
-                                    <i class="bx bxs-up-arrow align-middle"></i>
-                                    <sub class="text-info">
-                                        {{ new Date().toDateString() }}
-                                    </sub>
+                                <div class="mb-0 font-13 text-white">
+                                    <div>
+                                        <i class="bx mr-1 text-success bxs-up-arrow align-middle"></i>
+                                        <sub class="text-info">
+                                            {{ new Date().toDateString() }}
+                                        </sub>
+                                    </div>
                                     <span class="text-nowrap">
                                         ৳
                                         <b>
                                             {{ parseInt(Math.random() * 1000000) }}
                                         </b>
                                     </span>
-                                </p>
+                                </div>
                             </div>
                             <div class="widgets-icons bg-light-transparent bg-white p-1 ms-auto">
                                 <img src="https://files.etek.com.bd/images/expense.png" class="img-fluid" alt="">
@@ -81,18 +85,20 @@
                                         {{ parseInt(Math.random() * 10000000) }}
                                     </b>
                                 </h4>
-                                <p class="mb-0 font-13 text-white">
-                                    <i class="bx bxs-up-arrow align-middle"></i>
-                                    <sub class="text-info">
-                                        {{ new Date().toDateString() }}
-                                    </sub>
+                                <div class="mb-0 font-13 text-white">
+                                    <div>
+                                        <i class="bx bxs-up-arrow text-success mr-1 align-middle"></i>
+                                        <sub class="text-info">
+                                            {{ new Date().toDateString() }}
+                                        </sub>
+                                    </div>
                                     <span class="text-nowrap">
                                         ৳
                                         <b>
                                             {{ parseInt(Math.random() * 1000000) }}
                                         </b>
                                     </span>
-                                </p>
+                                </div>
                             </div>
                             <div class="widgets-icons bg-light-transparent bg-white p-1 ms-auto">
                                 <img src="https://files.etek.com.bd/images/profit.png" class="img-fluid" alt="">
@@ -114,18 +120,20 @@
                                         {{ parseInt(Math.random() * 10000000) }}
                                     </b>
                                 </h4>
-                                <p class="mb-0 font-13 text-white">
-                                    <i class="bx bxs-up-arrow align-middle"></i>
-                                    <sub class="text-info">
-                                        {{ new Date().toDateString() }}
-                                    </sub>
+                                <div class="mb-0 font-13 text-white">
+                                    <div>
+                                        <i class="bx mr-1 bxs-down-arrow text-danger align-middle"></i>
+                                        <sub class="text-info">
+                                            {{ new Date().toDateString() }}
+                                        </sub>
+                                    </div>
                                     <span class="text-nowrap">
                                         ৳
                                         <b>
                                             {{ parseInt(Math.random() * 1000000) }}
                                         </b>
                                     </span>
-                                </p>
+                                </div>
                             </div>
                             <div class="widgets-icons bg-light-transparent bg-white p-1 ms-auto">
                                 <img src="https://files.etek.com.bd/images/due.png" class="img-fluid" alt="">

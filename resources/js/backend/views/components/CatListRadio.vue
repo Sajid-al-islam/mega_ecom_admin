@@ -3,28 +3,32 @@
         <div class="left_line"></div>
         <li v-if="list[0] && list[0].parent_id == 0">
             <div class="details">
-                <input type="radio" name="parent_id" :value="0" checked  class="form-check-input">
+                <input type="radio" id="no_parent" name="parent_id" :value="0" checked  class="form-check-input">
                 <div class="title">
-                    no parent
+                    <label :for="`no_parent`" class="m-0 p-0 d-block">
+                        no parent
+                    </label>
                 </div>
             </div>
         </li>
         <li v-for="category in list" :key="category.id">
             <div class="details">
-                <input type="radio" name="parent_id" :value="category.id" :data-id="category.id"  class="form-check-input">
+                <input type="radio" :id="`cat_${category.id}`" name="parent_id" :value="category.id" :data-id="category.id"  class="form-check-input">
                 <div class="title">
-                    {{category.name}}
+                    <label :for="`cat_${category.id}`" class="m-0 p-0 d-block">
+                        {{category.title}}
+                    </label>
                     <!-- {{category.id}} -->
                 </div>
-                <div @click="show_child($event)" v-if="category.childrens && category.childrens.length" class="collpse">
-                    <i class="fa fa-plus fa-minus"></i>
+                <div @click="show_child($event)" v-if="category.all_childrens && category.all_childrens.length" class="collpse">
+                    <i class="fa fa-plus"></i>
                 </div>
             </div>
             <cat-list-radio
-                v-if="category.childrens && category.childrens.length"
+                v-if="category.all_childrens && category.all_childrens.length"
                 :id="category.id"
                 :parent="category.parent"
-                :list="category.childrens">
+                :list="category.all_childrens">
             </cat-list-radio>
         </li>
     </ul>
@@ -78,8 +82,8 @@ export default {
             // let parent_ul = event.currentTarget.parentNode.parentNode.parentNode;
             if (target) {
                 try {
-                    console.log(event.currentTarget?.childrens);
-                    event.currentTarget.childrens[0].classList.toggle("fa-plus");
+                    // console.log(event.currentTarget.querySelector('i'));
+                    event.currentTarget.querySelector('i').classList.toggle("fa-minus");
                 } catch (error) {
 
                 }

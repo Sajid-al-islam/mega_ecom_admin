@@ -7,6 +7,7 @@ import user_routes from "../management/UserManagement/users/setup/routes";
 import product_brand_routes from "../management/ProductManagement/Brand/setup/routes"
 import product_manufacture_routes from "../management/ProductManagement/Manufacture/setup/routes"
 import product_category_routes from "../management/ProductManagement/Category/setup/routes"
+import CategoryGroup from "../management/ProductManagement/CategoryGroup/setup/routes"
 import product_varient_routes from "../management/ProductManagement/Variant/setup/routes"
 import product_varient_group_routes from "../management/ProductManagement/VariantGroup/setup/routes"
 import product_varient_value_routes from "../management/ProductManagement/VariantValue/setup/routes"
@@ -16,6 +17,7 @@ import product_unit_groups from "../management/ProductManagement/UnitGroup/setup
 import product_units from "../management/ProductManagement/Unit/setup/routes"
 import product_tags from "../management/ProductManagement/ProductTag/setup/routes"
 import product_category_tags from "../management/ProductManagement/ProductCategoryTag/setup/routes"
+import BarcodeGenerator from "../management/ProductManagement/Barcode/BarcodeGenerator.vue"
 
 import configuration_routes from "../management/Configuration/setup/routes"
 import report_routes from "../management/Report/setup/routes"
@@ -41,6 +43,11 @@ const routes = {
             name: 'AllBlog',
             component: Dashboard,
         },
+        {
+            path:'barcode-generate',
+            name: 'BarcodeGenerator',
+            component: BarcodeGenerator,
+        },
         //blog management routes
         // blog_category_routes,
         // blog_routes,
@@ -51,6 +58,7 @@ const routes = {
         product_brand_routes,
         product_manufacture_routes,
         product_category_routes,
+        CategoryGroup,
         product_varient_group_routes,
         product_varient_routes,
         product_varient_value_routes,

@@ -7,7 +7,7 @@
             <div class="col-md-3">
                 <div class="pl-4">
                     <input type="checkbox" class="form-check-input">
-                    <label>
+                    <label class="ms-2">
                         Available in E-commerce
                     </label>
                 </div>

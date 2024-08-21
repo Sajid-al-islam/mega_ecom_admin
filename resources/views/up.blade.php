@@ -39,56 +39,46 @@
         let products = [];
         let uploaded = localStorage.getItem('uploaded') ? JSON.parse(localStorage.getItem('uploaded')) : {};
         let failed = localStorage.getItem('failed') ? JSON.parse(localStorage.getItem('failed')) : {};
+
         async function up_p(position) {
+            let is_error = 0;
             try {
-                try {
-                    processing.innerHTML = `
-                        ${start + 1} -
-                        ${products[position].id}
+                processing.innerHTML = `
+                        ${start + 1} / 16085
                     `;
 
-                    await fetch('/up-product?id=' + products[position].id, {
+                if (start <= 16085) {
+                    let res = await fetch(`/up-product?si=${start}`, {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': `{{ csrf_token() }}`,
                             "Content-Type": "application/json",
                         },
-                        body: JSON.stringify(products[position]),
+                        // body: JSON.stringify(products[position]),
                     });
 
-                    percent.innerHTML = (100 * position / products.length).toFixed(1) + ' %';
-                } catch (error) {
-                    failed[position] = position;
-                    localStorage.setItem('failed', JSON.stringify(failed));
+                    let status = res.status;
+                    let data = await res.text();
 
-                    let el = document.getElementById('failed_el');
-                    el.insertAdjacentHTML('afterbegin', `<div>${position}-${products[position].p_name}</div>`)
-                    // console.log(error);
+                    if (status != 200) {
+                        is_error = 1;
+                    }
                 }
 
+                percent.innerHTML = (100 * position / 16085).toFixed(1) + ' %';
+            } catch (error) {
+                throw error;
+            }
+
+            if (!is_error) {
                 start = start + 1;
                 localStorage.setItem('product_si', start);
-
-                // uploaded[products[position].id] = products[position].id;
-                // localStorage.setItem('uploaded',JSON.stringify(uploaded));
-
                 await up_p(start)
-            } catch (error) {
-
             }
-        }
-        async function get_p() {
-            let res = await fetch('/arogga/products.json');
-            let data = await res.json();
-            products = data;
-            products.sort((a, b) => a.id - b.id);
 
-            const uniqueIds = [...new Set(products.map(obj => obj.id))];
-            console.log(uniqueIds.length);
-
-            await up_p(start);
         }
-        get_p();
+
+        up_p();
     </script>
 </body>
 

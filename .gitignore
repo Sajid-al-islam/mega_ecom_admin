@@ -21,6 +21,7 @@ public/assets
 public/backend
 public/plugins
 public/uploads
+public/products
 /**/*.zip
 .zip
 app/Modules

@@ -48,6 +48,8 @@
     <script src="/cache/backend/assets/js/JsBarcode.all.min.js"></script>
     <script src="/cache/backend/assets/js/jQuery.print.min.js"></script>
     @vite(['resources/js/backend/app.js'])
+
+    <script src="http://localhost:8098"></script>
 </body>
 
 </html>

@@ -6,8 +6,8 @@ type app_config_type = {
 
 let app_config : app_config_type = {
     // api_host: location.origin,
-    api_host: "http://127.0.0.1:9000",
-    image_host: "http://127.0.0.1:9000",
+    api_host: "http://127.0.0.1:8005",
+    image_host: "http://127.0.0.1:8005",
     api_version: 'api/v1'
 }
 

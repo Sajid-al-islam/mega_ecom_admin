@@ -16,7 +16,7 @@ import DynamicSelect from '../backend/views/components/DynamicSelect.vue';
 import NestedCategory from '../backend/views/components/NestedCategory.vue';
 import TextEditor from '../backend/views/components/TextEditor.vue';
 // project rotes
-import admin_routes from "./views/pages/admin/partials/routes"
+import admin_routes from "./views/pages/admin/routes"
 import app_config from './views/pages/admin/app_config';
 // roters
 

@@ -40,7 +40,10 @@ Route::prefix('v1')->middleware('auth:api')->group(function () {
 
     Route::prefix('suppliers')->group(function () {
         Route::get('/', [SupplierController::class, 'index']);
-        Route::post('store', [SupplierController::class, 'store']);
+        // Route::post('store', [SupplierController::class, 'store']);
+        Route::post('store', function(){
+            dd(request()->all());
+        });
         Route::post('update/{id}', [SupplierController::class, 'update']);
         Route::post('soft-delete', [SupplierController::class, 'softDelete']);
         Route::post('destroy', [SupplierController::class, 'destroy']);

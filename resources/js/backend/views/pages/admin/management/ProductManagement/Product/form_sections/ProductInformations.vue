@@ -8,26 +8,34 @@
                 <label>
                     Product Name <span class="text-danger">*</span>
                 </label>
-                <input type="text" class="form-control">
+                <div>
+                    <input type="text" name="title" class="form-control">
+                </div>
             </div>
             <div class="col-md-12">
                 <label>
                     Product URL <span class="text-danger">*</span>
                 </label>
-                <input type="text" class="form-control">
+                <div>
+                    <input name="slug" type="text" class="form-control">
+                </div>
             </div>
             <div class="col-md-12">
                 <label>
                     Search Keywords <span class="text-danger">*</span>
                 </label>
-                <input type="text" class="form-control">
+                <div>
+                    <input name="search_keywords" type="text" class="form-control">
+                </div>
             </div>
 
             <div class="col-md-4">
                 <label>
-                    Select Image
+                    Thumbnail Image
                 </label>
-                <input type="text" class="form-control">
+                <div>
+                    <input type="file" name="thumb_image" class="form-control">
+                </div>
             </div>
         </div>
     </div>

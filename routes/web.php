@@ -190,15 +190,15 @@ function insert_categories($product)
                 'image' => null,
                 'image_alt' => null,
 
-                'meta_title' => replaceCompanyName($product->cat_seo_title),
-                'meta_description' => replaceCompanyName($product->cat_seo_description),
-                'meta_keywords' => replaceCompanyName($product->cat_seo_keywords),
-                'search_keywords' => $category . " " . Str::slug($category),
+                'meta_title' => replaceCompanyName($product->cat_seo_title ?? ""),
+                'meta_description' => replaceCompanyName($product->cat_seo_description ?? ""),
+                'meta_keywords' => replaceCompanyName($product->cat_seo_keywords ?? ""),
+                'search_keywords' => $category . " " . Str::slug($category ?? ""),
 
-                'page_header_title' => replaceCompanyName($product->category_intro_h1),
-                'page_header_description' => replaceCompanyName($product->category_intro_p),
-                'page_full_description_title' => replaceCompanyName($product->cat_seo_title),
-                'page_full_description' => replaceCompanyName($product->category_description),
+                'page_header_title' => replaceCompanyName($product->category_intro_h1 ?? ""),
+                'page_header_description' => replaceCompanyName($product->category_intro_p ?? ""),
+                'page_full_description_title' => replaceCompanyName($product->cat_seo_title ?? ""),
+                'page_full_description' => replaceCompanyName($product->category_description ?? ""),
                 'related_product_title' => "Latest " . $category . " Price List in BD",
 
                 'bc_url' => $product->category_url,
@@ -229,141 +229,27 @@ function insert_brand($brand)
         ]);
     }
 }
-Route::view('up', "up");
-Route::post('/up-product', function () {
-    /** functionalities */
-    set_time_limit(0);
-    ini_set('max_execution_time', 0);
 
-    $index = request()->si;
-    $products = get_product_json();
-    $product = $products[$index];
-    // dd($index, $product);
+// Route::view('up', "up");
+// Route::view('up-image', "up-image");
+Route::view('up-image-s3', "up-image-s3");
 
-    $slug = create_slug($product->url);
-    $product_category_ids = insert_categories($product);
+Route::post('/up-product-image-s3', function () {
+    $files = json_decode(file_get_contents(public_path("all_electric_uploadeds.json")));
 
-    // dd($index, $product);
-    $brand_id = null;
-    if (isset($product->brand)) {
-        $brand_id = insert_brand($product->brand);
-    }
-    $price = $product->price_single > 0 ? $product->price_single : 0;
+    $file = $files[request()->si];
+    $product_id = explode("/", $file)[8];
+    $image_name = explode("/", $file)[9];
 
-    $product_id = insertProduct([
-        'id' => $product->id,
-        'product_category_group_id' => 3,
-        'is_featured' => 0,
-        'is_new' => 0,
-        'is_available' => isset($product->status) && $product->status  == "In Stock" ? 1 : 0,
-        'is_pre_order' => 0,
-        'is_up_coming' => 0,
-        'is_emi_support' => 0,
-        'is_best_selling' => 0,
-        'is_trending' => 0,
-        'total_sold' => 0,
-        'barcode' => $product->code ?? null,
-        'type' => 'product',
+    $url = "https://etek-ecom.s3.amazonaws.com/uploads/products/$product_id/$image_name";
+    $headers = @get_headers($url);
 
-        'title' => $product->title,
-        'short_description' => json_encode($product->product_page_short_description ?? []),
-        'specification' => json_encode($product->specifications ?? []),
-        'description' => replaceCompanyName($product->full_description ?? ""),
-        'video_url' => null,
-        'product_menufecturer_id' => null,
-        'product_brand_id' => $brand_id,
-        'sku' => $product->code ?? null,
-        'product_unit_id' => 68838,
+    if ($headers && strpos($headers[0], '200')) {
 
-        'alert_quantity' => 10,
-        'seller_points' => 5,
-        'is_returnable' => 0,
-
-        'expiration_days' => '365',
-        'product_warranty' => 12,
-        'warranty_policy' => null,
-        'guarenty_policy' => null,
-
-        'price_type' => 'single',
-        'tax_type' => 'inclusive',
-        'tax_amount' => 0.00,
-        'purchase_price' => $price > 100 ? $product->price_single - 100 : 0,
-        'customer_sales_price' => $price,
-        'retailer_sales_price' => $price,
-        'minimum_sale_price' => $price,
-        'maximum_sale_price' => $price,
-        'profit_margin_percent' => 5,
-
-        'discount_type' => 'percent',
-        'discount_amount' => 0.00,
-
-        'meta_title' => replaceCompanyName($product->product_seo_title??""),
-        'meta_description' => replaceCompanyName($product->product_seo_description??""),
-        'meta_keywords' => replaceCompanyName($product->product_seo_keywords??""),
-        'search_keywords' => $product->title . " " . replaceCompanyName($product->product_seo_keywords??""),
-
-        'creator' => 1,
-        'slug' => $slug,
-        'is_hide' => 0,
-        'status' => 'active',
-
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
-
-    DB::table('product_category_products')->where('product_id', $product_id)->delete();
-    foreach ($product_category_ids as $cat_id) {
-        DB::table('product_category_products')->insert([
-            'product_category_id' => $cat_id,
-            'product_id' => $product_id,
-            'product_category_group_id' => 3,
-        ]);
+    } else {
+        $s3_image = Storage::disk('s3')->putFileAs("uploads/products/$product_id", $file, $image_name, 'public');
+        // dd($product_id, explode("/", $file));
     }
 
     return $product_id;
-    // dd($index, $product);
-    // return upload_product($product);
-    // return update_product_image($product);
-});
-
-Route::get('/set-all-form-listsss', function () {
-    $files = file_get_contents(public_path('all_electric_product_files.json'));
-    $files = json_decode($files);
-    $all_products = [];
-    $id_start = 67022;
-    function processFilePath($filePath)
-    {
-        $baseDir = "F:/workspace/solution/projects/mega_ecom_admin/public/products/";
-        $relativePath = str_replace($baseDir, '', $filePath);
-        $relativePath = preg_replace('/\.json$/', '', $relativePath);
-        $pathParts = explode('/', $relativePath);
-        foreach ($pathParts as $key => $value) {
-            $value = str_replace('_', '', $value);
-            $value = str_replace('-', ' ', $value);
-            $value = strtolower($value);
-            $pathParts[$key] = $value;
-        }
-        $pathParts = array_unique($pathParts);
-        return $pathParts;
-    }
-
-    function get_category_url($filePath)
-    {
-        $fileName = basename($filePath, '.json');
-        $transformedName = str_replace('_', '', $fileName);
-        return $transformedName;
-    }
-
-    foreach ($files as $file) {
-        $products = json_decode(file_get_contents($file));
-        $categories = processFilePath($file);
-        foreach ($products as $key => $product) {
-            $products[$key]->categories = $categories;
-            $products[$key]->id = $id_start++;
-            $products[$key]->category_url = "https://www.startech.com.bd/" . get_category_url($file);
-        }
-        // dd($file, $categories, $products[2]);
-        $all_products = array_merge($all_products, $products);
-    }
-    file_put_contents(public_path('all_electric_products.json'), json_encode($all_products));
 });

@@ -22,19 +22,19 @@ async function execute(event){
         form_data.append('product_category_group_id', "");
     }
 
-    if(is_nav.checked){
+    if(is_nav && is_nav.checked){
         form_data.append('is_nav', "1");
     }else{
         form_data.append('is_nav', "0");
     }
 
-    if(is_featured.checked){
+    if(is_featured && is_featured.checked){
         form_data.append('is_featured', "1");
     }else{
         form_data.append('is_featured', "0");
     }
 
-    if(serial.vlaue){
+    if(serial && serial.vlaue){
         form_data.append('serial', serial.vlaue);
     }else{
         form_data.append('serial', '');

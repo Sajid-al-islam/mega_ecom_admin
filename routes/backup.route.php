@@ -704,29 +704,29 @@ Route::get('/up-brands', function () {
 
 
 function readAllFilesFromFolder($directory)
-    {
-        $files = [];
+{
+    $files = [];
 
-        // Create a recursive iterator to loop through the directory and its subdirectories
-        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory));
+    // Create a recursive iterator to loop through the directory and its subdirectories
+    $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory));
 
-        foreach ($iterator as $file) {
-            // Skip directories
-            if ($file->isDir()) {
-                continue;
-            }
-
-            // Add the relative file path to the array
-            $files[] = str_replace('\\', '/', $file->getPathname());
+    foreach ($iterator as $file) {
+        // Skip directories
+        if ($file->isDir()) {
+            continue;
         }
 
-        return $files;
+        // Add the relative file path to the array
+        $files[] = str_replace('\\', '/', $file->getPathname());
     }
 
-    //$directory = public_path('products');
-    //$fileList = readAllFilesFromFolder($directory);
+    return $files;
+}
 
-    //return ($fileList);
+//$directory = public_path('products');
+//$fileList = readAllFilesFromFolder($directory);
+
+//return ($fileList);
 
 
 Route::get('/set-all-form-list', function () {
@@ -760,4 +760,273 @@ Route::get('/set-all-form-list', function () {
         $all_products = array_merge($all_products, $products);
     }
     file_put_contents(public_path('all_electric_products.json'), json_encode($all_products));
+});
+
+Route::get('/set-all-form-listsss', function () {
+    $files = file_get_contents(public_path('all_electric_product_files.json'));
+    $files = json_decode($files);
+    $all_products = [];
+    $id_start = 67022;
+    function processFilePath($filePath)
+    {
+        $baseDir = "F:/workspace/solution/projects/mega_ecom_admin/public/products/";
+        $relativePath = str_replace($baseDir, '', $filePath);
+        $relativePath = preg_replace('/\.json$/', '', $relativePath);
+        $pathParts = explode('/', $relativePath);
+        foreach ($pathParts as $key => $value) {
+            $value = str_replace('_', '', $value);
+            $value = str_replace('-', ' ', $value);
+            $value = strtolower($value);
+            $pathParts[$key] = $value;
+        }
+        $pathParts = array_unique($pathParts);
+        return $pathParts;
+    }
+
+    function get_category_url($filePath)
+    {
+        $fileName = basename($filePath, '.json');
+        $transformedName = str_replace('_', '', $fileName);
+        return $transformedName;
+    }
+
+    foreach ($files as $file) {
+        $products = json_decode(file_get_contents($file));
+        $categories = processFilePath($file);
+        foreach ($products as $key => $product) {
+            $products[$key]->categories = $categories;
+            $products[$key]->id = $id_start++;
+            $products[$key]->category_url = "https://www.startech.com.bd/" . get_category_url($file);
+        }
+        // dd($file, $categories, $products[2]);
+        $all_products = array_merge($all_products, $products);
+    }
+    file_put_contents(public_path('all_electric_products.json'), json_encode($all_products));
+});
+
+Route::get('/make-image-list', function () {
+    $products = json_decode(file_get_contents(public_path("all_electric_products.json")));
+    $product_images = [];
+    foreach ($products as $key => $product) {
+        $product_image = [
+            "id" => $product->id,
+            "url" => $product->url,
+            "thumb" => $product->img,
+            "images" => [],
+        ];
+
+        if(isset($product->images) && count($product->images)){
+            foreach ($product->images as $image) {
+                $product_image["images"][] = $image;
+            }
+        }
+
+        $product_images[] = $product_image;
+    }
+
+    file_put_contents(public_path('all_electric_images.json'),json_encode($product_images));
+
+    dd(count($products));
+    // dd($product_images[0]);
+});
+
+Route::post('/up-product', function () {
+    /** functionalities */
+    set_time_limit(0);
+    ini_set('max_execution_time', 0);
+
+    $index = request()->si;
+    $products = get_product_json();
+    $product = $products[$index];
+    $p = DB::table('products')->where('id', $product->id)->first(); if($p){ echo "done"; return 0;};
+    // dd($index, $product);
+
+    $slug = create_slug($product->url);
+    $product_category_ids = insert_categories($product);
+
+    // dd($index, $product);
+    $brand_id = null;
+    if (isset($product->brand)) {
+        $brand_id = insert_brand($product->brand);
+    }
+    $price = $product->price_single > 0 ? $product->price_single : 0;
+
+    $product_id = insertProduct([
+        'id' => $product->id,
+        'product_category_group_id' => 3,
+        'is_featured' => 0,
+        'is_new' => 0,
+        'is_available' => isset($product->status) && $product->status  == "In Stock" ? 1 : 0,
+        'is_pre_order' => 0,
+        'is_up_coming' => 0,
+        'is_emi_support' => 0,
+        'is_best_selling' => 0,
+        'is_trending' => 0,
+        'total_sold' => 0,
+        'barcode' => $product->code ?? null,
+        'type' => 'product',
+
+        'title' => $product->title,
+        'short_description' => json_encode($product->product_page_short_description ?? []),
+        'specification' => json_encode($product->specifications ?? []),
+        'description' => replaceCompanyName($product->full_description ?? ""),
+        'video_url' => null,
+        'product_menufecturer_id' => null,
+        'product_brand_id' => $brand_id,
+        'sku' => $product->code ?? null,
+        'product_unit_id' => 68838,
+
+        'alert_quantity' => 10,
+        'seller_points' => 5,
+        'is_returnable' => 0,
+
+        'expiration_days' => '365',
+        'product_warranty' => 12,
+        'warranty_policy' => null,
+        'guarenty_policy' => null,
+
+        'price_type' => 'single',
+        'tax_type' => 'inclusive',
+        'tax_amount' => 0.00,
+        'purchase_price' => $price > 100 ? $product->price_single - 100 : 0,
+        'customer_sales_price' => $price,
+        'retailer_sales_price' => $price,
+        'minimum_sale_price' => $price,
+        'maximum_sale_price' => $price,
+        'profit_margin_percent' => 5,
+
+        'discount_type' => 'percent',
+        'discount_amount' => 0.00,
+
+        'meta_title' => replaceCompanyName($product->product_seo_title ?? ""),
+        'meta_description' => replaceCompanyName($product->product_seo_description ?? ""),
+        'meta_keywords' => replaceCompanyName($product->product_seo_keywords ?? ""),
+        'search_keywords' => $product->title . " " . replaceCompanyName($product->product_seo_keywords ?? ""),
+
+        'creator' => 1,
+        'slug' => $slug,
+        'is_hide' => 0,
+        'status' => 'active',
+
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    DB::table('product_category_products')->where('product_id', $product_id)->delete();
+    foreach ($product_category_ids as $cat_id) {
+        DB::table('product_category_products')->insert([
+            'product_category_id' => $cat_id,
+            'product_id' => $product_id,
+            'product_category_group_id' => 3,
+        ]);
+    }
+
+    return $product_id;
+    // dd($index, $product);
+    // return upload_product($product);
+    // return update_product_image($product);
+});
+Route::post('/up-product', function () {
+    set_time_limit(0);
+    ini_set('max_execution_time', 0);
+
+    $index = request()->si;
+    $products = file_get_contents(public_path('all_electric_images.json'));
+    $products = json_decode($products);
+    $product = $products[$index];
+
+    $product_id = $product->id;
+
+    $image_name = basename($product->thumb);;
+    $directory = public_path('uploads/products/' . $product_id);
+    if (!is_dir($directory)) {
+        mkdir($directory, 0755, true);
+    }
+    $image_name = $directory . "/$image_name";
+    if (!file_exists($image_name)) {
+        $image_file = file_get_contents($product->thumb);
+        file_put_contents($image_name, $image_file);
+    }
+
+    if (isset($product->images) && count($product->images)) {
+        foreach ($product->images as $key => $image) {
+            $image_name = basename($image);;
+            $directory = public_path('uploads/products/' . $product_id);
+            if (!is_dir($directory)) {
+                mkdir($directory, 0755, true);
+            }
+            $image_name = $directory . "/$image_name";
+            if (!file_exists($image_name)) {
+                $image_file = file_get_contents($image);
+                file_put_contents($image_name, $image_file);
+            }
+        }
+    }
+
+    return "ok";
+});
+
+
+Route::get('/up-image-single', function () {
+    function extractPathFromUploads($filePath)
+    {
+        $baseDir = 'uploads';
+        $position = strpos($filePath, $baseDir);
+        if ($position !== false) {
+            return substr($filePath, $position);
+        }
+        return '';
+    }
+
+    $paths = json_decode(file_get_contents(public_path('all_electric_uploaded.json')));
+
+    foreach ($paths as $path) {
+        // $path = "F:/workspace/solution/projects/mega_ecom_admin/public/uploads/products/67022/i62-228x228.jpg";
+        $product_id = explode("/", $path)[8];
+        $image_name = explode("/", $path)[9];
+        $db_path = extractPathFromUploads($path);
+        $is_thumb = strpos($image_name, '228x228') !== false ? 1 : 0;
+        // Storage::disk('s3')->putFileAs("s3uploads/products/$product_id",$path, $image_name);
+
+        // starts from 69780
+        $check = DB::table('product_images')
+            ->where('product_id', $product_id)
+            ->where('url', $db_path)
+            ->first();
+        if (!$check) {
+            DB::table('product_images')
+                ->insert([
+                    "product_id" => $product_id,
+                    "caption" => null,
+                    "url" => $db_path,
+                    "alt" => null,
+                    "is_thumb" => $is_thumb,
+                    "is_primary" => $is_thumb,
+                    "is_secondary" => 0,
+                    "creator" => 1,
+                    "slug" => $product_id . rand(100, 999),
+                    "created_at" => now(),
+                ]);
+            // dd($product_id, $image_name, $db_path);
+        }
+    }
+});
+
+Route::get('/get-electric-images-from-uploads', function () {
+    function readAllFilesFromFolder($directory)
+    {
+        $files = [];
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory));
+        foreach ($iterator as $file) {
+            if ($file->isDir()) {
+                continue;
+            }
+            $files[] = str_replace('\\', '/', $file->getPathname());
+        }
+        return $files;
+    }
+    $directory = public_path('uploads/products');
+    $directories =  readAllFilesFromFolder($directory);
+    file_put_contents(public_path("all_electric_uploaded.json"), json_encode($directories));
+    return $directories[5];
 });

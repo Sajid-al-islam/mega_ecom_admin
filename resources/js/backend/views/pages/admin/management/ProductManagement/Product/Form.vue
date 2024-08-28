@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-
         <form @submit.prevent="submitHandler">
             <div class="card">
                 <div class="card-header d-flex justify-content-between">
@@ -162,9 +161,7 @@ export default {
                 $(`.category_card_dropdown`).animate({
                     scrollTop: $(`#cat_351`).offset().top,
                 });
-
             }
-
         },
 
         set_value: function(state, value){

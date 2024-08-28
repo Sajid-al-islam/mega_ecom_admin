@@ -26,7 +26,7 @@
                         title: `Customers`,
                     },
                     {
-                        route_name: `AllUser`,
+                        route_name: `AllSupplier`,
                         title: `Suppliers`,
                     },
                     {

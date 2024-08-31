@@ -1,12 +1,13 @@
 import setup_type from './setup_type';
+import app_config from '../../../../app_config';
 
 const prefix: string = 'User';
 const setup: setup_type = {
     prefix,
     permission: [`admin`,`super_admin`],
 
-    api_host: location.origin,
-    api_version: 'api/v1',
+    api_host: app_config.api_host,
+    api_version: app_config.api_version,
     api_end_point: 'users',
 
     select_fields: ['id', 'name', 'email', 'photo', 'phone_number','slug', 'created_at', 'status'],
@@ -15,6 +16,7 @@ const setup: setup_type = {
     module_name: 'users',
     route_prefix: `User`,
     store_prefix: 'users',
+    route_path: `users`,
 
     layout_title: prefix + ' Management',
     page_title: `${prefix} Management`,

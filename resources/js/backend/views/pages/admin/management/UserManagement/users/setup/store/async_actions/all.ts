@@ -34,6 +34,7 @@ let execute = async () => {
         params: {
             page: state.page.get(),
             paginate: state.paginate.get(),
+            limit: state.paginate.get(),
             search_key: state.search_key.get(),
             search: state.search_key.get(),
             sort_by_col: state.sort_by_col.get(),
@@ -54,7 +55,7 @@ let execute = async () => {
     }
 
     state.select_fields.get().forEach(function(el, index){
-        full_url.searchParams.set(`selected_fields[${index}]`, el);
+        full_url.searchParams.set(`fields[${index}]`, el);
     });
 
     let index = 0;

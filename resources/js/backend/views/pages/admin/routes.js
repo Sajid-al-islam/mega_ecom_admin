@@ -4,6 +4,30 @@ import Dashboard from "./Dashboard.vue"
 //user management routes
 import user_routes from "./management/UserManagement/users/setup/routes";
 import user_supplier_routes from "./management/UserManagement/suppliers/setup/routes";
+import user_supplier_type_routes from "./management/UserManagement/supplier_type/setup/routes";
+import user_retailer_routes from "./management/UserManagement/retailers/setup/routes";
+import user_retailer_type_routes from "./management/UserManagement/retailer_type/setup/routes";
+import user_employer_routes from "./management/UserManagement/employees/setup/routes";
+import user_customer_routes from "./management/UserManagement/customers/setup/routes";
+
+//Configuration routes
+import email_configuration_routes from "./management/Configuration/email/setup/routes"
+import sms_configuration_routes from "./management/Configuration/sms/setup/routes"
+import website_configuration_routes from "./management/Configuration/website/setup/routes"
+
+//Inventory Management
+import inventory_wearhouse__branch_routes from "./management/Inventory/wearhouse_branch/setup/routes"
+import inventory_wearhouse_routes from "./management/Inventory/wearhouse/setup/routes"
+import inventory_stocks_routes from "./management/Inventory/stocks/setup/routes"
+
+//Accounting Management
+import account_vat_routes from "./management/AccountManagement/vat/setup/routes"
+import account_vat_group_routes from "./management/AccountManagement/vat_group/setup/routes"
+import account_account_expenditure_routes from "./management/AccountManagement/accountExpenditure/setup/routes"
+import account_account_expenditure_group_routes from "./management/AccountManagement/accountExpenditureGroup/setup/routes"
+import account_account_heads_routes from "./management/AccountManagement/AccountHeads/setup/routes"
+import account_account_routes from "./management/AccountManagement/Account/setup/routes"
+import account_account_number_routes from "./management/AccountManagement/AccountNumber/setup/routes"
 
 import product_brand_routes from "./management/ProductManagement/Brand/setup/routes"
 import product_manufacture_routes from "./management/ProductManagement/Manufacture/setup/routes"
@@ -20,7 +44,7 @@ import product_tags from "./management/ProductManagement/ProductTag/setup/routes
 import product_category_tags from "./management/ProductManagement/ProductCategoryTag/setup/routes"
 import BarcodeGenerator from "./management/ProductManagement/Barcode/BarcodeGenerator.vue"
 
-import configuration_routes from "./management/Configuration/setup/routes"
+// import configuration_routes from "./management/Configuration/setup/routes"
 import report_routes from "./management/Report/setup/routes"
 
 import ecommer_order_routes from "./management/Ecommerce/Order/setup/routes"
@@ -55,6 +79,30 @@ const routes = {
         //user management routes
         user_routes,
         user_supplier_routes,
+        user_retailer_routes,
+        user_employer_routes,
+        user_customer_routes,
+        user_supplier_type_routes,
+        user_retailer_type_routes,
+
+        //Configuration routes
+        email_configuration_routes,
+        sms_configuration_routes,
+        website_configuration_routes,
+
+        //Inventory Management
+        inventory_wearhouse__branch_routes,
+        inventory_wearhouse_routes,
+        inventory_stocks_routes,
+
+        //Accounting Management
+        account_vat_group_routes,
+        account_vat_routes,
+        account_account_expenditure_routes,
+        account_account_expenditure_group_routes,
+        account_account_heads_routes,
+        account_account_routes,
+        account_account_number_routes,
 
         // product management
         product_brand_routes,
@@ -71,7 +119,7 @@ const routes = {
         product_tags,
         product_category_tags,
 
-        configuration_routes,
+        // configuration_routes,
         report_routes,
 
         ecommer_order_routes,

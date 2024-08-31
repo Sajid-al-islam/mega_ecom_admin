@@ -98,11 +98,13 @@ export default {
     created: async function () {
         this.paginate = 10;
         await this.get_all_data();
+        this.set_only_latest_data(false)
     },
     methods: {
         ...mapActions(data_store,[
             'set_page', // needs in pagination props
             'set_paginate', // needs in pagination props
+            'set_only_latest_data',
         ]),
         get_all_data,
     },

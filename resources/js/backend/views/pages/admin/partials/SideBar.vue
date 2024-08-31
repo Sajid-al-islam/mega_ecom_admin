@@ -23,6 +23,10 @@
                 :icon_image="`https://files.etek.com.bd/images/icon_user.png`" :menu_title="`User Management`" :menus="[
                     {
                         route_name: `AllUser`,
+                        title: `Users`,
+                    },
+                    {
+                        route_name: `AllCustomer`,
                         title: `Customers`,
                     },
                     {
@@ -30,11 +34,11 @@
                         title: `Suppliers`,
                     },
                     {
-                        route_name: `AllUser`,
+                        route_name: `AllRetailer`,
                         title: `Retailers`,
                     },
                     {
-                        route_name: `AllUser`,
+                        route_name: `AllEmployer`,
                         title: `Employees`,
                     },
 
@@ -43,12 +47,24 @@
             <side-bar-drop-down-menus :icon_image="`https://files.etek.com.bd/images/icon_accounting.png`"
                 :icon="`fa fa-plus`" :menu_title="`Accounts`" :menus="[
                     {
-                        route_name: `AllCategory`,
+                        route_name: `AllExpenditure_groups`,
                         title: `Expendeture Groups`,
                     },
                     {
-                        route_name: `AllBlog`,
+                        route_name: `AllExpenditures`,
                         title: `Expendetures`,
+                    },
+                    {
+                        route_name: `AllAccount-heads`,
+                        title: `Account Heads`,
+                    },
+                    {
+                        route_name: `AllAccounts`,
+                        title: `Account`,
+                    },
+                    {
+                        route_name: `AllAccount-numbers`,
+                        title: `Account Numbers`,
                     },
                     {
                         route_name: `AllBlog`,
@@ -65,6 +81,14 @@
                     {
                         route_name: `AllBlog`,
                         title: `Ledger`,
+                    },
+                    {
+                        route_name: `AllVat-groups`,
+                        title: `Vat Groups`,
+                    },
+                    {
+                        route_name: `AllVats`,
+                        title: `Vat's`,
                     },
                 ]" />
 
@@ -235,11 +259,15 @@
             <side-bar-drop-down-menus :icon_image="`https://files.etek.com.bd/images/icon_inventory.png`"
                 :icon="`fa fa-plus`" :menu_title="`Inventory`" :menus="[
                     {
-                        route_name: `AllCategory`,
+                        route_name: `AllWear-house-branches`,
+                        title: `Wearhouse Braches`,
+                    },
+                    {
+                        route_name: `AllWear-houses`,
                         title: `Wearhouse`,
                     },
                     {
-                        route_name: `AllBlog`,
+                        route_name: `AllStocks`,
                         title: `Stocks`,
                     },
                 ]" />
@@ -247,11 +275,11 @@
             <side-bar-drop-down-menus :icon_image="`https://files.etek.com.bd/images/icon_supplier.png`"
                 :icon="`fa fa-plus`" :menu_title="`Supplier`" :menus="[
                     {
-                        route_name: `AllCategory`,
+                        route_name: `AllSupplier_type`,
                         title: `Supplier Types`,
                     },
                     {
-                        route_name: `AllBlog`,
+                        route_name: `AllSupplier`,
                         title: `Suppliers`,
                     },
                 ]" />
@@ -259,11 +287,11 @@
             <side-bar-drop-down-menus :icon_image="`https://files.etek.com.bd/images/icon_retailer.png`"
                 :icon="`fa fa-plus`" :menu_title="`Retailer`" :menus="[
                     {
-                        route_name: `AllCategory`,
+                        route_name: `AllRetailer_type`,
                         title: `Retailer Types`,
                     },
                     {
-                        route_name: `AllBlog`,
+                        route_name: `AllRetailer`,
                         title: `Retailers`,
                     },
                 ]" />
@@ -294,25 +322,29 @@
             <side-bar-drop-down-menus :icon_image="`https://files.etek.com.bd/images/icon_settings.png`"
                 :icon="`fa fa-plus`" :menu_title="`Configuration`" :menus="[
                     {
-                        route_name: `EmailConfig`,
+                        route_name: `AllEmail-configuration`,
                         title: `Email`,
                     },
                     {
-                        route_name: `SmsConfig`,
+                        route_name: `AllSMS-configuration`,
                         title: `SMS`,
                     },
                     {
-                        route_name: `PaymentGatewayConfig`,
-                        title: `Payment Gateway`,
+                        route_name: `AllWebsite-configuration`,
+                        title: `Website`,
                     },
-                    {
-                        route_name: `TelegramConfig`,
-                        title: `Telegram`,
-                    },
-                    {
-                        route_name: `TwilioConfig`,
-                        title: `Twilio`,
-                    },
+                    // {
+                    //     route_name: `PaymentGatewayConfig`,
+                    //     title: `Payment Gateway`,
+                    // },
+                    // {
+                    //     route_name: `TelegramConfig`,
+                    //     title: `Telegram`,
+                    // },
+                    // {
+                    //     route_name: `TwilioConfig`,
+                    //     title: `Twilio`,
+                    // },
                 ]" />
 
 

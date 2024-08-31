@@ -267,6 +267,7 @@ Route::get('/a-products', function () {
 
     dd('ok');
 });
+
 Route::get('/ids', function () {
     $products = DB::table('products')->select('id')->get();
     $ids = collect($products)->map(function ($i) {
@@ -926,6 +927,7 @@ Route::post('/up-product', function () {
     // return upload_product($product);
     // return update_product_image($product);
 });
+
 Route::post('/up-product', function () {
     set_time_limit(0);
     ini_set('max_execution_time', 0);

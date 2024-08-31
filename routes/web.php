@@ -245,11 +245,52 @@ Route::post('/up-product-image-s3', function () {
     $headers = @get_headers($url);
 
     if ($headers && strpos($headers[0], '200')) {
-
     } else {
         $s3_image = Storage::disk('s3')->putFileAs("uploads/products/$product_id", $file, $image_name, 'public');
         // dd($product_id, explode("/", $file));
     }
 
     return $product_id;
+});
+
+Route::get('/get-j-image', function () {
+    $products = DB::table('product_images')->where('url', 'LIKE', "%\%%")->get();
+    function update_image($image, $newUrl, $base_path)
+    {
+        DB::table('product_images')
+            ->where('product_id', $image->product_id)
+            ->where('url', $image->url)
+            ->update([
+                "url" => $base_path . "/" . $newUrl,
+            ]);
+    }
+    foreach ($products as $image) {
+        $file_name = pathinfo($image->url, PATHINFO_FILENAME);
+        $ext = pathinfo($image->url, PATHINFO_EXTENSION);
+        $newUrl = Str::slug($file_name) . '.' . $ext;
+
+        $fileUrlBase = public_path($image->url);
+        $fileUrl = str_replace(' ', '-', $fileUrlBase);
+
+        $base_path = dirname($image->url);
+
+        $newFileUrl = public_path($base_path . "/" . $newUrl);
+
+        // dd($newUrl, $image, $base_path);
+
+        if (file_exists($fileUrl)) {
+            rename($fileUrl, $newFileUrl);
+            update_image($image, $newUrl, $base_path);
+        } else if (file_exists($fileUrlBase)) {
+            rename($fileUrlBase, $newFileUrl, $base_path);
+            update_image($image, $newUrl, $base_path);
+        } else {
+            echo "The file does not exist: " . $fileUrl;
+        }
+
+        // dd($newFileUrl, $image, $base_path);
+        // dd(file_exists("file:///F:/workspace/solution/projects/mega_ecom_admin/public/uploads/medicines/28637Savlon-0.1%25+0.5%25.jpeg"));
+        // dd($fileUrl, "uploads/medicines/28637Savlon-0.1%25+0.5%25.jpeg", file_exists($fileUrl));
+    }
+    dd($products->count());
 });

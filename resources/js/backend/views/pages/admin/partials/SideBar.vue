@@ -284,6 +284,35 @@
                     },
                 ]" />
 
+
+            <side-bar-drop-down-menus :icon_image="`https://files.etek.com.bd/images/icon_supplier.png`"
+                :icon="`fa fa-plus`" :menu_title="`HRM`" :menus="[
+                    {
+                        route_name: `AllHrmEmployee`,
+                        title: `Employee Management`,
+                    },
+                    {
+                        route_name: `Allattendence`,
+                        title: `Employee attendence`,
+                    },
+                    {
+                        route_name: `AllEmployeeType`,
+                        title: `Employee Type`,
+                    },
+                    {
+                        route_name: `AlljobTitle`,
+                        title: `Job titles`,
+                    },
+                    {
+                        route_name: `AllWorkDepartMent`,
+                        title: `Work Departments`,
+                    },
+                    {
+                        route_name: `AllEmployeeType`,
+                        title: `Employee Type`,
+                    }
+                ]" />
+
             <side-bar-drop-down-menus :icon_image="`https://files.etek.com.bd/images/icon_retailer.png`"
                 :icon="`fa fa-plus`" :menu_title="`Retailer`" :menus="[
                     {

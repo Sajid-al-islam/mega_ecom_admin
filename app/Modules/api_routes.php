@@ -107,6 +107,10 @@ include_once  base_path("app/Modules/WebsiteApi/WishList/Route.php");
 include_once  base_path("app/Modules/WebsiteApi/CompareList/Route.php");
 include_once  base_path("app/Modules/WebsiteApi/Order/Route.php");
 
+include_once  base_path("app/Modules/WebsiteApi/UserProfile/Route.php");
+
+include_once  base_path("app/Modules/WebsiteApi/Order/Route.php");
+
 include_once  base_path("app/Modules/WebsiteApi/SearchHandling/Route.php");
 
 include_once  base_path("app/Modules/WebsiteApi/ProductReview/Route.php");
@@ -114,3 +118,12 @@ include_once  base_path("app/Modules/WebsiteApi/ProductQuestion/Route.php");
 
 include_once  base_path("app/Modules/TagManagement/ProductTag/Route.php");
 include_once  base_path("app/Modules/TagManagement/ProductCategoryTag/Route.php");
+
+include_once  base_path("app/Modules/WebsiteApi/WebsiteSettings/Route.php");
+include_once  base_path("app/Modules/WebsiteApi/WebsiteSubscriber/Route.php");
+include_once  base_path("app/Modules/WebsiteApi/NavbarMenu/Route.php");
+
+include_once  base_path("app/Modules/WebsiteApi/Blog/Route.php");
+
+include_once  base_path("app/Modules/PaymentGateway/SSLCommerZ/Route.php");
+

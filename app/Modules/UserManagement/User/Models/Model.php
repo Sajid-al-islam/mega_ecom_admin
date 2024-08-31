@@ -82,9 +82,13 @@ class Model extends Authenticatable
     }
     public function user_delivery_address()
     {
-        return $this->hasOne(self::$userAddressModel, 'user_id', 'id')->where('address_types', 'delivery');
+        return $this->hasMany(self::$userAddressModel, 'user_id', 'id')->with('division:id,name','district:id,name','station:id,name')->where('address_types', 'delivery');
     }
     public function user_address_contact_person()
+    {
+        return $this->hasMany(self::$userAddressContactPersonModel, 'user_id', 'id');
+    }
+    public function contact_persons()
     {
         return $this->hasMany(self::$userAddressContactPersonModel, 'user_id', 'id');
     }

@@ -47,7 +47,14 @@ import BarcodeGenerator from "./management/ProductManagement/Barcode/BarcodeGene
 // import configuration_routes from "./management/Configuration/setup/routes"
 import report_routes from "./management/Report/setup/routes"
 
-import ecommer_order_routes from "./management/Ecommerce/Order/setup/routes"
+import ecommer_order_routes from "./management/Ecommerce/Order/setup/routes";
+
+// Sajid routes
+import hrm_employee_routes from "./management/HRM/employees/setup/routes";
+import job_title_routes from "./management/HRM/jobTitles/setup/routes";
+import work_department_routes from "./management/HRM/WorkDepartment/setup/routes";
+import attendence_routes from "./management/HRM/attendence/setup/routes";
+import employee_type_routes from "./management/HRM/EmployeeType/setup/routes";
 
 const routes = {
     path: '',
@@ -123,6 +130,13 @@ const routes = {
         report_routes,
 
         ecommer_order_routes,
+
+        // sajid routes
+        hrm_employee_routes,
+        job_title_routes,
+        work_department_routes,
+        attendence_routes,
+        employee_type_routes
     ]
 };
 

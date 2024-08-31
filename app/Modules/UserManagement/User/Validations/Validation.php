@@ -41,14 +41,14 @@ class Validation extends FormRequest
      */
     public function rules(): array
     {
-        // dd($this);
+        // dd(auth()->id());
         return [
             'name' => 'required | sometimes',
             'user_name' => 'required | sometimes',
-            'email' => 'required|unique:users,email,' . request()->id,
+            'email' => 'required|unique:users,email,' . auth()->id(),
             'phone_number' => 'required | sometimes',
             'photo' => 'sometimes',
-            'password' => 'sometimes'.(request()->id?'':"|required"),
+            'password' => 'required | sometimes',
             'confirmed' => 'sometimes|required|same:password',
             'role_id' => 'sometimes',
             'status' => ['sometimes', Rule::in(['active', 'inactive'])],
